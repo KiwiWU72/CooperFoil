@@ -1,0 +1,2523 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>高階銅箔電鍍添加劑 — 技術銷售簡報</title>
+<style>
+/* ======================================================
+   VARIABLES
+====================================================== */
+:root {
+  --bg:    #070D1A;
+  --card:  #0D1929;
+  --card2: #132234;
+  --cu:    #C07228;
+  --cu2:   #E8953A;
+  --bl:    #38BDF8;
+  --tl:    #2DD4BF;
+  --gn:    #4ADE80;
+  --rd:    #F43F5E;
+  --yl:    #FBBF24;
+  --wt:    #EEF4FB;
+  --gr:    #7E8FA3;
+  --dgr:   #2A3A4A;
+}
+
+/* ======================================================
+   RESET & BASE
+====================================================== */
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+html, body {
+  width:100%; height:100%;
+  background: var(--bg);
+  color: var(--wt);
+  font-family: 'Calibri', 'Microsoft JhengHei', 'Noto Sans TC', 'PingFang TC', sans-serif;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ======================================================
+   KEYFRAMES
+====================================================== */
+@keyframes fadeUp   { from { opacity:0; transform:translateY(22px);  } to { opacity:1; transform:translateY(0);  } }
+@keyframes fadeDown { from { opacity:0; transform:translateY(-22px); } to { opacity:1; transform:translateY(0);  } }
+@keyframes fadeLeft { from { opacity:0; transform:translateX(28px);  } to { opacity:1; transform:translateX(0);  } }
+@keyframes fadeRt   { from { opacity:0; transform:translateX(-28px); } to { opacity:1; transform:translateX(0);  } }
+@keyframes scaleIn  { from { opacity:0; transform:scale(0.88);       } to { opacity:1; transform:scale(1);       } }
+@keyframes fadeIn   { from { opacity:0; }                              to { opacity:1; }                            }
+
+@keyframes glow {
+  0%,100% { text-shadow: 0 0 6px rgba(250,204,21,.35); }
+  50%      { text-shadow: 0 0 18px rgba(250,204,21,.9), 0 0 36px rgba(250,204,21,.4); }
+}
+@keyframes copperPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(232,149,58,0); }
+  50%      { box-shadow: 0 0 14px 2px rgba(232,149,58,.35); }
+}
+@keyframes floatY {
+  0%,100% { transform:translateY(0); }
+  50%      { transform:translateY(-8px); }
+}
+@keyframes progressFill { from { width:0; } to { width:var(--target-w); } }
+
+/* ======================================================
+   DECK & SLIDES
+====================================================== */
+#deck {
+  position:fixed; inset:0; bottom:68px;
+  overflow:hidden;
+}
+
+.slide {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  background: var(--bg);
+  opacity:0;
+  transform:translateX(50px) scale(.97);
+  transition: opacity .45s cubic-bezier(.4,0,.2,1),
+              transform .45s cubic-bezier(.4,0,.2,1);
+  pointer-events:none;
+  will-change: opacity, transform;
+}
+.slide.active {
+  opacity:1; transform:translateX(0) scale(1);
+  pointer-events:all;
+}
+.slide.exit {
+  opacity:0; transform:translateX(-50px) scale(.97);
+  transition: opacity .35s ease, transform .35s ease;
+}
+
+/* animated items — hidden until slide becomes active */
+.au { opacity:0; }
+.slide.active .au { opacity:1; }
+
+/* animation classes (applied when slide is active) */
+.slide.active .au.fu  { animation: fadeUp   .5s ease both; }
+.slide.active .au.fd  { animation: fadeDown .5s ease both; }
+.slide.active .au.fl  { animation: fadeLeft .5s ease both; }
+.slide.active .au.fr  { animation: fadeRt   .5s ease both; }
+.slide.active .au.si  { animation: scaleIn  .45s ease both; }
+.slide.active .au.fi  { animation: fadeIn   .5s ease both; }
+
+/* stagger delays */
+.d0{animation-delay:.05s!important} .d1{animation-delay:.15s!important}
+.d2{animation-delay:.25s!important} .d3{animation-delay:.35s!important}
+.d4{animation-delay:.45s!important} .d5{animation-delay:.55s!important}
+.d6{animation-delay:.65s!important} .d7{animation-delay:.75s!important}
+.d8{animation-delay:.85s!important} .d9{animation-delay:.95s!important}
+.da{animation-delay:1.05s!important} .db{animation-delay:1.15s!important} .dc{animation-delay:1.25s!important}
+
+/* ======================================================
+   LAYOUT COMPONENTS
+====================================================== */
+.s-header {
+  padding:12px 22px 4px 22px;
+  border-left:5px solid var(--cu);
+  flex-shrink:0;
+}
+.s-title {
+  font-family: Arial, 'Microsoft JhengHei', sans-serif;
+  font-size: clamp(1.5rem,2.4vw,2rem);
+  font-weight:bold; color:var(--wt); line-height:1.18;
+}
+.s-sub {
+  font-size:clamp(.88rem,1.1vw,.98rem);
+  color:var(--cu2); font-style:italic; margin-top:4px;
+}
+.divider {
+  height:2px; flex-shrink:0; margin:6px 18px;
+  background:linear-gradient(90deg,var(--cu) 0%,transparent 100%);
+}
+.s-body {
+  flex:1; padding:8px 18px 6px 18px;
+  display:flex; flex-direction:column;
+  min-height:0; overflow:hidden;
+}
+.s-foot {
+  background:var(--card); padding:6px 22px;
+  font-size:clamp(.82rem,.98vw,.92rem); color:var(--cu2);
+  border-top:1px solid #1A2E40; flex-shrink:0;
+}
+
+/* grid helpers */
+.g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; flex:1; min-height:0; }
+.g2 { display:grid; grid-template-columns:1fr 1fr;     gap:12px; flex:1; min-height:0; }
+
+/* card */
+.card {
+  background:var(--card); border-radius:4px;
+  border:1px solid var(--dgr); overflow:hidden;
+  display:flex; flex-direction:column;
+}
+.c-head {
+  padding:8px 12px; font-weight:bold;
+  font-size:clamp(.92rem,1.15vw,1.05rem); flex-shrink:0;
+}
+.c-body {
+  padding:9px 12px; flex:1;
+  font-size:clamp(.9rem,1.05vw,.98rem); line-height:1.55;
+  overflow:auto;
+}
+
+/* table */
+.ctbl { width:100%; border-collapse:collapse; font-size:clamp(.84rem,.98vw,.92rem); }
+.ctbl th { background:var(--card2); padding:6px 10px; color:var(--cu2); text-align:left; font-size:clamp(.86rem,1.02vw,.94rem); }
+.ctbl td { padding:5px 10px; border-bottom:1px solid var(--dgr); line-height:1.5; }
+.ctbl tr:nth-child(even) td { background:rgba(13,25,41,.5); }
+
+/* color helpers */
+.cu{color:var(--cu2)} .bl{color:var(--bl)} .gn{color:var(--gn)}
+.rd{color:var(--rd)} .yl{color:var(--yl)} .tl{color:var(--tl)}
+.gr{color:var(--gr)} .wt{color:var(--wt)} .bold{font-weight:bold}
+
+/* key box */
+.kbox {
+  background:var(--card2); border:1.5px solid var(--yl); border-radius:4px;
+  padding:7px 13px; font-size:clamp(.88rem,1.05vw,.98rem); color:var(--yl);
+  font-weight:bold; flex-shrink:0; margin-top:6px;
+}
+
+/* formula box */
+.formula-box {
+  border-top:1px solid rgba(255,255,255,.08);
+  padding:7px 12px 6px 12px;
+  font-size:clamp(.82rem,.96vw,.9rem);
+  font-family:'Consolas','Courier New',monospace;
+  text-align:center; flex-shrink:0; background:rgba(0,0,0,.25);
+  line-height:1.8;
+}
+/* Atom color classes for chemical formulas */
+.ca-o { color:#38BDF8; font-weight:bold; }  /* Oxygen - blue */
+.ca-n { color:#4ADE80; font-weight:bold; }  /* Nitrogen - green */
+.ca-s { color:#FBBF24; font-weight:bold; animation:glow 2s ease-in-out infinite; }  /* Sulfur - yellow glow */
+.ca-c { color:#E8953A; }  /* Carbon chain */
+.ca-neg{ color:#F43F5E; font-weight:bold; }  /* Negative charge */
+.ca-pos{ color:#4ADE80; font-weight:bold; }  /* Positive charge */
+
+/* crystal phase nav */
+.cp-dot {
+  width:9px; height:9px; border-radius:50%;
+  background:var(--dgr); cursor:pointer; transition:all .2s;
+}
+.cp-dot.cp-on { background:var(--cu); transform:scale(1.5); }
+
+/* elem school strip */
+.elem-card {
+  background:var(--card2); border:1px solid var(--dgr); border-radius:4px;
+  padding:8px 11px; font-size:clamp(.85rem,1.0vw,.94rem); line-height:1.6;
+}
+
+/* double-sulfur glow */
+.dsj { color:var(--yl); font-weight:bold; animation: glow 2s ease-in-out infinite; }
+
+/* ======================================================
+   NAV BAR
+====================================================== */
+#nav {
+  position:fixed; bottom:0; left:0; right:0; height:68px;
+  background:#060C18; border-top:1px solid #1A2E40;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:5px; z-index:300; padding:4px 0 5px;
+}
+#nav-controls {
+  display:flex; align-items:center; justify-content:center; gap:14px;
+}
+/* ── Breadcrumb ── */
+#breadcrumb {
+  display:flex; align-items:center; gap:5px;
+  font-size:10.5px; height:20px;
+}
+#breadcrumb .bc-sep {
+  color:#2A3A4A; font-size:10px; flex-shrink:0;
+}
+.bc-pill {
+  padding:1.5px 9px; border-radius:10px; border:1px solid;
+  opacity:.22; transition:all .35s ease; white-space:nowrap;
+  font-size:10.5px; cursor:default; font-weight:600;
+  letter-spacing:.02em;
+}
+.bc-pill.bc-on  { opacity:1; }
+.bc-pill.bc-dim { opacity:.14; }
+.bc-m1 { color:var(--rd);  border-color:var(--rd); }
+.bc-m2 { color:var(--cu2); border-color:var(--cu2); }
+.bc-m3 { color:var(--tl);  border-color:var(--tl); }
+.bc-m4 { color:var(--gn);  border-color:var(--gn); }
+.bc-m1.bc-on { background:rgba(244,63,94,.12); }
+.bc-m2.bc-on { background:rgba(232,149,58,.12); }
+.bc-m3.bc-on { background:rgba(45,212,191,.12); }
+.bc-m4.bc-on { background:rgba(74,222,128,.12); }
+.pl-btn {
+  flex:1; padding:7px 6px; border-radius:4px;
+  border:1.5px solid var(--dgr); background:var(--card2);
+  color:var(--gr); cursor:pointer;
+  font-size:clamp(.78rem,.9vw,.86rem);
+  font-family:inherit; transition:all .22s; font-weight:600;
+  text-align:center; line-height:1.2;
+}
+.pl-btn:hover { background:var(--card); color:var(--wt); }
+.pl-btn-0.pl-btn-on { border-color:var(--bl);  color:var(--bl);  background:rgba(56,189,248,.1); }
+.pl-btn-1.pl-btn-on { border-color:var(--cu2); color:var(--cu2); background:rgba(192,114,40,.1); }
+.pl-btn-2.pl-btn-on { border-color:var(--yl);  color:var(--yl);  background:rgba(250,204,21,.1); }
+.nb {
+  background:var(--card2); border:1px solid var(--dgr);
+  color:var(--wt); padding:5px 18px; border-radius:4px;
+  cursor:pointer; font-size:13px; transition:all .2s;
+  font-family:inherit;
+}
+.nb:hover { background:var(--cu); border-color:var(--cu); }
+.nb:disabled { opacity:.3; cursor:default; }
+#ctr { color:var(--gr); font-size:12px; min-width:52px; text-align:center; }
+
+#dots { display:flex; gap:5px; align-items:center; }
+.dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--dgr); cursor:pointer; transition:all .2s;
+}
+.dot.on { background:var(--cu); transform:scale(1.4); }
+
+#prog {
+  position:fixed; bottom:68px; left:0; right:0;
+  height:3px; background:#111D2C; z-index:300;
+}
+#pfill { height:100%; background:var(--cu); transition:width .4s ease; }
+
+/* ======================================================
+   SLIDE 1 — TITLE
+====================================================== */
+#s1 {
+  justify-content:center; align-items:center; text-align:center;
+  position:relative; overflow:hidden;
+}
+.t-circle1 {
+  position:absolute; top:-12%; right:-6%; width:44vmin; height:44vmin;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(192,114,40,.18),transparent 70%);
+  animation:floatY 6s ease-in-out infinite;
+}
+.t-circle2 {
+  position:absolute; bottom:4%; left:-7%; width:34vmin; height:34vmin;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(56,189,248,.12),transparent 70%);
+  animation:floatY 8s ease-in-out infinite reverse;
+}
+.t-main {
+  font-family:Arial,'Microsoft JhengHei',sans-serif;
+  font-size:clamp(2.2rem,4.8vw,3.8rem); font-weight:900;
+  color:var(--wt); line-height:1.15; letter-spacing:1px;
+}
+.t-sub {
+  font-size:clamp(1.3rem,2.4vw,2rem); color:var(--cu2);
+  font-weight:bold; margin-top:10px;
+}
+.t-desc {
+  font-size:clamp(.9rem,1.2vw,1.05rem); color:var(--gr); margin-top:14px;
+}
+.dline { width:220px; height:3px; background:var(--cu); margin:12px auto; border-radius:2px; }
+.tags  { display:flex; gap:9px; justify-content:center; flex-wrap:wrap; margin-top:14px; }
+.tag {
+  background:var(--card2); border:1px solid var(--cu);
+  border-radius:20px; padding:6px 16px;
+  font-size:clamp(.82rem,1.05vw,.94rem); color:var(--cu2);
+  animation:copperPulse 3s ease infinite;
+}
+.tag:nth-child(2){animation-delay:.5s}
+.tag:nth-child(3){animation-delay:1s}
+.tag:nth-child(4){animation-delay:1.5s}
+
+/* ======================================================
+   SLIDE 2 — AGENDA
+====================================================== */
+.ag-grid {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  grid-template-rows:repeat(3,1fr); gap:8px; flex:1;
+}
+.ag-card {
+  background:var(--card2); border:1px solid var(--dgr); border-radius:4px;
+  display:flex; flex-direction:column; padding:10px 12px;
+  cursor:pointer; transition:all .25s; position:relative; overflow:hidden;
+}
+.ag-card:hover { border-color:var(--cu); transform:translateY(-2px);
+  box-shadow:0 4px 16px rgba(192,114,40,.22); }
+.ag-card.anim  { border-color:var(--yl); }
+.ag-card.anim:hover { box-shadow:0 4px 16px rgba(250,204,21,.25); }
+.ag-num {
+  position:absolute; top:0; left:0; width:30px; height:26px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.68rem; font-weight:bold; color:var(--bg);
+}
+.ag-title {
+  font-size:clamp(.86rem,1.08vw,.98rem); font-weight:bold;
+  color:var(--wt); margin-top:22px; line-height:1.35;
+}
+.ag-sub {
+  font-size:clamp(.76rem,.95vw,.88rem); color:var(--gr);
+  font-style:italic; margin-top:auto; padding-top:5px;
+}
+
+/* ======================================================
+   SLIDE 6 & 9 — CANVAS SLIDES
+====================================================== */
+.canvas-wrap {
+  flex:1; min-height:0; position:relative;
+  border-radius:4px; overflow:hidden;
+  background:var(--card); border:1px solid var(--dgr);
+}
+.canvas-wrap canvas { position:absolute; inset:0; width:100%; height:100%; }
+
+.scene-row {
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;
+  flex-shrink:0; margin-top:7px;
+}
+.scene-card {
+  background:var(--card2); border-radius:4px; padding:8px 10px;
+  font-size:clamp(.84rem,.98vw,.92rem); line-height:1.55;
+  border-left:3px solid;
+}
+
+/* ======================================================
+   MISC HELPERS
+====================================================== */
+.row2 { display:flex; gap:12px; flex:1; min-height:0; }
+.half { flex:1; min-width:0; }
+.myth-head { background:var(--rd); }
+.fact-head { background:var(--gn); color:var(--bg)!important; }
+.type-a-head { background:var(--rd); }
+.type-b-head { background:var(--gn); color:var(--bg)!important; }
+</style>
+</head>
+<body>
+
+<!-- ===================================================
+     DECK
+=================================================== -->
+<div id="deck">
+
+<!-- ========== SLIDE 1: TITLE ========== -->
+<div class="slide" id="s1">
+  <div class="t-circle1"></div>
+  <div class="t-circle2"></div>
+  <div class="t-main au fu d0">高階銅箔電鍍添加劑</div>
+  <div class="t-sub  au fu d1">技術制勝策略</div>
+  <div class="t-desc au fi d2">科學底層邏輯 &nbsp;×&nbsp; 商業說服框架 </div>
+  <div class="dline au fi d3"></div>
+  <div class="t-desc au fi d3">針對高階 CCL 廠與銅箔製造廠之技術型銷售腳本</div>
+  <div class="tags au fu d4">
+    <span class="tag">5G 高頻</span>
+    <span class="tag">AI 伺服器</span>
+    <span class="tag">VLP / HVLP</span>
+    <span class="tag">電化學動力學</span>
+  </div>
+</div>
+
+<!-- ========== SLIDE 2: AGENDA ========== -->
+<div class="slide" id="s2">
+  <div class="s-header">
+    <div class="s-title au fd d0">簡報目錄</div>
+  </div>
+  <div class="divider au fi d1"></div>
+  <div class="s-body" style="display:flex;flex-direction:column;gap:8px">
+    <!-- 00 featured intro banner -->
+    <div class="ag-card anim au fu d1" style="flex:0 0 auto;flex-direction:row;align-items:center;padding:10px 16px;gap:14px;border-color:var(--cu2)">
+      <span class="ag-num" style="background:var(--cu2);color:var(--bg);position:relative;width:auto;height:auto;padding:4px 10px;border-radius:3px;font-size:.78rem">00</span>
+      <div style="flex:1">
+        <div style="font-size:clamp(.9rem,1.1vw,1rem);font-weight:bold;color:var(--wt)">電解銅箔製造全流程</div>
+        <div style="font-size:clamp(.78rem,.95vw,.88rem);color:var(--gr);font-style:italic;margin-top:2px">溶解槽 → 過濾 → 鈦桶陰極電解 → 銅箔成型捲取 &nbsp;／&nbsp; LCY 高階添加劑切入點總覽</div>
+      </div>
+      <span style="font-size:.78rem;color:var(--yl);border:1px solid var(--yl);padding:3px 10px;border-radius:3px;white-space:nowrap">◎ Canvas 動畫</span>
+    </div>
+    <!-- 4×2 grid for chapters 01–07 (no 03 old PDI) -->
+    <div class="ag-grid" style="grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);flex:1">
+      <div class="ag-card au si d1"><span class="ag-num" style="background:var(--cu)">01</span><div class="ag-title">為什麼需要高階銅箔？</div><div class="ag-sub">趨膚效應 Skin Effect &amp; δ &lt; Rz</div></div>
+      <div class="ag-card anim au si d2"><span class="ag-num" style="background:var(--yl)">02</span><div class="ag-title">推拉效應 × 微觀電鍍</div><div class="ag-sub">PEG / 胜肽 / SPS 毫秒級肉搏</div></div>
+      <div class="ag-card anim au si d3"><span class="ag-num" style="background:#4ADE80;color:#0B1825">03</span><div class="ag-title">晶界工程：三螺旋降維</div><div class="ag-sub">Gly-Pro-Hyp × (111) 晶面鎖死</div></div>
+      <div class="ag-card au si d4"><span class="ag-num" style="background:var(--tl)">04</span><div class="ag-title">電荷精控：pI 定位</div><div class="ag-sub">Type B 鹼處理 vs. Type A 酸處理</div></div>
+      <div class="ag-card au si d5"><span class="ag-num" style="background:var(--tl)">05</span><div class="ag-title">GELITA 雙核心護城河</div><div class="ag-sub">脫醯胺 pI 4.7–5.2 × PDI → 1.0</div></div>
+      <div class="ag-card au si d6"><span class="ag-num" style="background:var(--cu)">06</span><div class="ag-title">研發主管的技術盲區</div><div class="ag-sub">PDI × 晶界工程 × 吸脱附平衡</div></div>
+      <div class="ag-card au si d7"><span class="ag-num" style="background:var(--cu)">07</span><div class="ag-title">結語與差異化定位</div><div class="ag-sub">三維知識壁壘 — 化學不可複製性</div></div>
+      <div class="ag-card au si d8" style="opacity:0.18;pointer-events:none"><span class="ag-num" style="background:var(--dgr)"></span><div class="ag-title"></div><div class="ag-sub"></div></div>
+    </div>
+  </div>
+  <div class="s-foot au fi da">★ 橘色邊框 = 製程總覽動畫（00）；綠色 = 晶界工程動畫（03）；青色 = 供應商科學（04–05）</div>
+</div>
+
+<!-- ========== SLIDE 3: Manufacturing ========== -->
+<div class="slide" id="s3">
+  <div class="s-header">
+    <div class="s-title au fd d0">00 &nbsp;電解銅箔製造全流程 — 從銅塊到銅箔</div>
+    <div class="s-sub   au fi d1">溶解槽 → 過濾 → 鈦桶陰極電解 → 銅箔成型捲取</div>
+  </div>
+  <div class="divider au fi d1"></div>
+  <div class="s-body" style="padding:4px 10px 2px 10px">
+    <canvas id="c-mfg" style="flex:1;width:100%;min-height:0;border-radius:4px"></canvas>
+  </div>
+  <div class="s-foot au fi d9" style="font-size:clamp(.88rem,1.05vw,.98rem)">
+    LCY 高階添加劑在電解槽中精準調控 Cu²⁺ 沉積 — Suppressor 抑制峰頂 / Leveler 整平微觀 / SPS 加速谷底填充
+  </div>
+</div>
+
+<!-- ========== SLIDE 4: 趨膚效應 ========== -->
+<div class="slide" id="s4">
+  <div class="s-header">
+    <div class="s-title au fd d0">01 &nbsp;為什麼需要「高階」銅箔？— 趨膚效應</div>
+    <div class="s-sub   au fi d1">高頻高速傳輸下，電子訊號的物理限制決定銅箔品質要求</div>
+  </div>
+  <div class="divider au fi d1"></div>
+  <div class="s-body">
+    <!-- 3-column layout: 小學生版 | Business | Science -->
+    <div class="g3">
+      <!-- Col 1: 小學生版 (左) -->
+      <div class="card au fr d2" style="border-color:var(--yl)">
+        <div class="c-head" style="background:var(--yl);color:var(--bg)">&#127775; 小學生版本（非專業也能懂）</div>
+        <div class="c-body" style="display:flex;flex-direction:column;gap:5px;font-size:clamp(.87rem,1.02vw,.96rem);line-height:1.5">
+          <div class="au fu d3">
+            <div class="yl bold" style="margin-bottom:3px">銅箔拿來做什麼？</div>
+            <div>📱 手機天線 &amp; 電路板 &nbsp; 🔋 電動車電池 &nbsp; 🤖 AI 伺服器</div>
+          </div>
+          <div class="au fu d5" style="border-top:1px solid var(--dgr);padding-top:5px">
+            <div class="bl bold" style="margin-bottom:3px">趨膚效應是什麼？</div>
+            <div>就像<span class="yl bold">「魚只在水面游泳」</span>，高頻訊號不走導線中心，只貼著最外層跑。<br><span class="gr" style="font-size:.9em">→ 表面平整度比厚度重要 100 倍！</span></div>
+          </div>
+          <div class="au fu d7" style="border-top:1px solid var(--dgr);padding-top:5px">
+            <div class="gn bold" style="margin-bottom:3px">Standard / VLP / HVLP？</div>
+            <div>
+              <span class="rd">Standard 🪨</span> = 石子路（坑坑洞洞）<br>
+              <span class="yl">VLP 🚗</span> = 柏油路（比較平）<br>
+              <span class="gn">HVLP 🏎</span> = F1 賽道（極平滑）<br>
+              <span class="gr" style="font-size:.9em">路越平，訊號車跑越快！</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Col 2: Business (中) -->
+      <div class="card au fu d2" style="border-color:var(--cu)">
+        <div class="c-head" style="background:var(--cu);color:var(--bg)">[業務語言]&nbsp; 山脈 vs 高速公路</div>
+        <div class="c-body" style="display:flex;flex-direction:column;gap:4px;font-size:clamp(.86rem,1.0vw,.94rem);line-height:1.45">
+          <div class="au fu d3 cu bold">訊號只走「最外層表面」跑</div>
+          <div class="au fu d4 rd">▸ 高粗糙度銅箔 → 表面是「連綿高山」→ 訊號嚴重失真</div>
+          <div class="au fu d5 gn bold">▸ VLP / HVLP：把山脈夷平 → 打造高速公路！</div>
+          <div class="au fu d6 gr" style="font-size:.88em;border:1px solid rgba(74,222,128,.2);padding:3px 6px;border-radius:3px">
+            VLP = Very Low Profile（超低粗糙度）<br>
+            HVLP = Hyper Very Low Profile（極限低粗糙度）
+          </div>
+          <table class="ctbl au fu d7" style="margin-top:3px;font-size:clamp(.82rem,.95vw,.9rem)">
+            <tr><th>等級</th><th>Rz (μm)</th><th>應用</th><th>訊號損耗</th></tr>
+            <tr><td>Standard</td><td class="rd" style="text-align:center">&gt; 3.0</td><td class="gr">一般 PCB</td><td class="rd">高 ▲</td></tr>
+            <tr><td>VLP</td><td class="yl" style="text-align:center">&lt; 2.0</td><td class="gr">5G / mmWave</td><td class="yl">中 →</td></tr>
+            <tr><td>HVLP</td><td class="gn bold" style="text-align:center">&lt; 1.0</td><td class="gr">AI 伺服器 / 77GHz</td><td class="gn">低 ▼</td></tr>
+            <tr><td style="color:var(--tl)">HVLP+</td><td class="tl bold" style="text-align:center">&lt; 0.5</td><td class="gr">先進封裝 / 毫米波</td><td class="tl">極低 ▼▼</td></tr>
+          </table>
+          <div class="au fu d8 gn bold" style="font-size:.88em;margin-top:2px">目前業界前沿：HVLP Rz &lt; 0.5 μm（先進晶片封裝要求）</div>
+        </div>
+      </div>
+      <!-- Col 3: Science (右) -->
+      <div class="card au fl d2" style="border-color:var(--bl)">
+        <div class="c-head" style="background:var(--bl);color:var(--bg)">[科學底層]&nbsp; Skin Effect 趨膚效應</div>
+        <div class="c-body" style="display:flex;flex-direction:column;gap:6px">
+          <div class="au fu d3"><span class="wt bold">趨膚深度公式：</span></div>
+          <div class="au fu d4" style="text-align:center;padding:5px;background:var(--card2);border-radius:3px">
+            <span class="yl bold" style="font-size:clamp(1rem,1.5vw,1.15rem)">δ = 1 / √( π · f · μ · σ )</span>
+          </div>
+          <div class="au fu d4 gr" style="font-size:.86em">δ：趨膚深度 | f：頻率 | μ：導磁率 | σ：導電率</div>
+          <table class="ctbl au fu d5" style="margin-top:2px">
+            <tr><th>頻率 f</th><th>趨膚深度 δ</th><th>銅箔等級</th></tr>
+            <tr><td>1 GHz</td><td class="bl">~ 2.1 μm</td><td class="gr">VLP</td></tr>
+            <tr><td>10 GHz</td><td class="bl">~ 0.7 μm</td><td class="gr">HVLP</td></tr>
+            <tr><td>28 GHz</td><td class="bl">~ 0.4 μm</td><td class="tl">HVLP+</td></tr>
+            <tr><td>77 GHz</td><td class="bl">~ 0.2 μm</td><td class="tl">HVLP+</td></tr>
+          </table>
+          <div class="au fu d6 gr" style="font-size:.88em;margin-top:2px">
+            頻率越高 → 電流越集中在表面薄層 → 導體內部完全無效<br>
+            <span class="bl">趨膚深度 δ 必須 &gt; 表面粗糙度 Rz，訊號才能正常傳導</span>
+          </div>
+          <!-- ⚠ Physical contradiction warning -->
+          <div class="au fu d7" style="background:rgba(244,63,94,.08);border:1.5px solid var(--rd);border-radius:5px;padding:8px 11px;margin-top:5px">
+            <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:4px">
+              <span style="font-size:.95em">⚠</span>
+              <span class="rd bold" style="font-size:clamp(.83rem,.96vw,.91rem)">物理矛盾臨界點</span>
+            </div>
+            <div style="font-size:clamp(.8rem,.92vw,.88rem);line-height:1.6;color:var(--wt)">
+              當 <span class="rd bold">δ &lt; R<sub>z</sub></span> 時，
+              訊號已無法貼著「平面」傳導——<br>
+              電流將在銅箔表面的<span class="yl bold">微觀山脈</span>中
+              <span class="rd bold">漫射耗散</span>，<br>
+              此段損耗屬<span class="rd bold">熱力學不可逆損失</span>，無法以等化器補償。
+            </div>
+            <div style="font-size:clamp(.78rem,.88vw,.85rem);color:var(--gr);margin-top:4px;border-top:1px solid rgba(244,63,94,.2);padding-top:4px">
+              例：28 GHz 下 δ ≈ 0.38 μm；Standard 銅箔 Rz &gt; 3 μm → 訊號深陷山谷，<span class="rd">損耗超出規格 8× 以上</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="s-foot au fi db">關鍵結論：高頻時代，銅箔「表面品質」決定一切；HVLP 全名 Hyper Very Low Profile，Rz &lt; 0.5 μm 是 AI 晶片封裝最新要求</div>
+</div>
+
+<!-- ========== SLIDE 4: 推拉效應 ========== -->
+<div class="slide" id="s5">
+  <div class="s-header">
+    <div class="s-title au fd d0">02 &nbsp;推拉效應 × 微觀電鍍：一場毫秒級肉搏戰</div>
+    <div class="s-sub   au fi d1">Suppressor × Leveler × Accelerator — 點擊左側按鈕觸發各階段沉浸動畫</div>
+  </div>
+  <div class="divider au fi d1"></div>
+  <div class="s-body" style="flex-direction:row;gap:10px;overflow:hidden">
+
+    <!-- Left 40%: additive cards + phase buttons + balance note -->
+    <div style="width:40%;flex-shrink:0;display:flex;flex-direction:column;gap:4px;overflow:visible">
+
+      <!-- Suppressor card -->
+      <div class="kbox au fd d1" style="border-color:var(--bl);padding:5px 9px">
+        <div style="font-size:clamp(.8rem,.95vw,.9rem);font-weight:700;color:var(--bl);margin-bottom:3px">
+          🔵 Suppressor — PEG（抑制劑）
+        </div>
+        <div style="font-size:clamp(.72rem,.82vw,.78rem);color:var(--gr);line-height:1.4">
+          PEG 長鏈聚合物 + Cl⁻ 協同吸附於銅表面，形成灰色擴散屏障。<br>
+          全面覆蓋、均勻阻擋 → 降低整體沉積速率。
+        </div>
+      </div>
+
+      <!-- Leveler card -->
+      <div class="kbox au fd d1" style="border-color:var(--cu2);padding:5px 9px">
+        <div style="font-size:clamp(.8rem,.95vw,.9rem);font-weight:700;color:var(--cu2);margin-bottom:3px">
+          🟠 Leveler — 膠原蛋白胜肽（整平劑）
+        </div>
+        <div style="font-size:clamp(.72rem,.82vw,.78rem);color:var(--gr);line-height:1.4">
+          帶正電胜肽（NH₃⁺），被電場梯度牽引至山峰頂端。<br>
+          精準封鎖凸起處，阻止峰頂繼續生長 → 物理整平。
+        </div>
+      </div>
+
+      <!-- Accelerator / SPS card -->
+      <div class="kbox au fd d1" style="border-color:var(--yl);padding:5px 9px">
+        <div style="font-size:clamp(.8rem,.95vw,.9rem);font-weight:700;color:var(--yl);margin-bottom:3px">
+          ⚡ Accelerator / SPS（加速劑）
+        </div>
+        <div style="font-size:clamp(.72rem,.82vw,.78rem);color:var(--gr);line-height:1.4">
+          SPS 雙硫鍵（<span class="dsj">S─S</span>）在谷底斷裂，釋放 Cu⁺ 錯合催化位點。<br>
+          <span style="color:var(--yl);font-weight:600">谷底加速 ÷ 峰頂阻斷 = 超等角填孔</span>
+        </div>
+      </div>
+
+      <!-- Phase trigger buttons -->
+      <div style="display:flex;gap:5px;margin-top:2px">
+        <button class="pl-btn pl-btn-0 pl-btn-on" onclick="setPlatingPhase(0)">① 無添加劑</button>
+        <button class="pl-btn pl-btn-1" onclick="setPlatingPhase(1)">② 煞車部署</button>
+        <button class="pl-btn pl-btn-2" onclick="setPlatingPhase(2)">③ ⚡ 雙硫鍵</button>
+      </div>
+
+      <!-- Balance note -->
+      <div class="kbox au fd d2" style="padding:7px 10px;margin-top:2px">
+        <div style="font-size:clamp(.7rem,.8vw,.76rem);color:var(--gr);line-height:1.5">
+          ⚖️ <strong style="color:var(--wt)">動態平衡關鍵</strong>：三種添加劑濃度比例決定填孔成敗。<br>
+          SPS 過多 → 過填（over-fill）凸起；PEG 不足 → 四壁空洞。
+        </div>
+      </div>
+
+    </div><!-- end left panel -->
+
+    <!-- Right 60%: canvas + phase info bar -->
+    <div style="flex:1;display:flex;flex-direction:column;gap:5px;min-width:0">
+      <canvas id="c-plating" style="width:100%;flex:1;border-radius:8px;background:#0a0f1a;min-height:0"></canvas>
+      <div id="plating-phase-bar" style="display:flex;align-items:flex-start;gap:8px;padding:6px 10px;background:var(--card2);border-radius:6px;border:1px solid var(--dgr)">
+        <span id="plating-ph-label" style="font-size:clamp(.76rem,.88vw,.84rem);font-weight:700;color:var(--bl);white-space:nowrap;flex-shrink:0">▸ 階段一</span>
+        <span id="plating-ph-desc" style="font-size:clamp(.7rem,.8vw,.76rem);color:var(--gr);line-height:1.4">無添加劑：Cu²⁺ 隨機沉積 — 山峰持續竄高，谷底永遠無法填平</span>
+      </div>
+    </div><!-- end right panel -->
+
+  </div><!-- end s-body -->
+  <div class="s-foot au fi d2">毫秒時間尺度：吸附 ~10 ms · 脫附 ~1 ms · SPS 置換 &lt;1 ms</div>
+</div>
+
+<div class="slide" id="s6">
+  <div class="s-header">
+    <div class="s-title au fd d0">03 &nbsp;晶界工程：三螺旋的降維打擊</div>
+    <div class="s-sub   au fi d1">Gly-Pro-Hyp 剛性螺旋 × FCC (111) 幾何封鎖 → 等軸晶孕育 — 原子等級不可複製性</div>
+  </div>
+  <div class="divider au fi d1"></div>
+  <div class="s-body" style="flex-direction:row;gap:10px;overflow:hidden">
+
+    <!-- LEFT 46%: Helix canvas + label -->
+    <div style="width:46%;flex-shrink:0;display:flex;flex-direction:column;gap:6px">
+      <canvas id="c-helix" style="flex:1;border-radius:8px;background:#080d18;min-height:0;width:100%"></canvas>
+      <div class="kbox au fd d2" style="border-color:var(--tl);padding:6px 10px">
+        <div style="font-size:clamp(.74rem,.84vw,.8rem);font-weight:700;color:var(--tl)">Gly-Pro-Hyp 左旋三股螺旋</div>
+        <div style="font-size:clamp(.67rem,.76vw,.72rem);color:var(--gr);line-height:1.4;margin-top:2px">
+          節距 8.6 Å ≈ (111) 面間距 2.56 Å × 3 → <span style="color:var(--tl)">幾何共振鎖定</span><br>
+          剛性骨架 (Hyp 羥脯胺酸穩定) → 物理封鎖不脫落
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Crystal mechanism + xtal canvas -->
+    <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
+
+      <!-- Two comparison cards -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <div class="kbox au fd d1" style="border-color:var(--rd);padding:7px 10px">
+          <div style="font-size:clamp(.76rem,.88vw,.82rem);font-weight:700;color:var(--rd);margin-bottom:3px">✗ 無添加劑</div>
+          <div style="font-size:clamp(.67rem,.76vw,.72rem);color:var(--gr);line-height:1.45">
+            FCC 銅熱力學天性<br>
+            選擇 <strong style="color:var(--rd)">(111)</strong> 最低表面能<br>
+            單向柱狀晶生長<br>
+            <span style="color:var(--rd)">脆、各向異性</span>
+          </div>
+        </div>
+        <div class="kbox au fd d1" style="border-color:var(--tl);padding:7px 10px">
+          <div style="font-size:clamp(.76rem,.88vw,.82rem);font-weight:700;color:var(--tl);margin-bottom:3px">✓ 加入 Gly-Pro-Hyp</div>
+          <div style="font-size:clamp(.67rem,.76vw,.72rem);color:var(--gr);line-height:1.45">
+            封鎖 (111) → 逼迫<br>
+            <strong style="color:var(--tl)">(200) + (220)</strong> 多向生長<br>
+            等軸晶孕育<br>
+            <span style="color:var(--tl)">強韌、各向同性</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lock-and-key mechanism note -->
+      <div class="kbox au fd d1" style="border-color:var(--yl);padding:6px 10px">
+        <div style="font-size:clamp(.72rem,.82vw,.78rem);color:var(--gr);line-height:1.5">
+          🔑 <strong style="color:var(--yl)">鑰匙與鎖孔</strong>：螺旋節距與 (111) 原子幾何完美吻合<br>
+          ΔG<sub>ads</sub> = −28 kJ/mol (DFT) &nbsp;|&nbsp; 選擇性 ×4 &nbsp;|&nbsp; 抗拉強度 +35%
+        </div>
+      </div>
+
+      <!-- Crystal animation canvas -->
+      <canvas id="c-xtal" style="flex:1;border-radius:8px;background:#080d18;min-height:0;width:100%"></canvas>
+      <div style="text-align:center;font-size:clamp(.65rem,.74vw,.7rem);color:var(--gr)">
+        ← 柱狀晶（無添加劑）&nbsp;&nbsp;|&nbsp;&nbsp; 等軸晶（Gly-Pro-Hyp）→
+      </div>
+
+    </div><!-- end right -->
+  </div><!-- s-body -->
+  <div class="s-foot au fi d2">表面能：γ(111) = 1.95 J/m² &lt; γ(110) = 2.24 &lt; γ(100) = 2.32 — 胜肽逆轉熱力學偏好</div>
+</div>
+
+<div class="slide" id="s7">
+  <div class="s-header">
+    <div class="s-title au fd d0">04 &nbsp;鹼處理 (Type B) vs. 酸處理 (Type A)</div>
+    <div class="s-sub   au fi d1">硫酸銅電解液 pH ≈ 1 &nbsp;│&nbsp; pH &lt; pI → 蛋白質帶正電 → 吸附Cu表面 &nbsp;│&nbsp; pI 精控決定銅箔品質</div>
+  </div>
+  <div class="divider au fi d1"></div>
+  <div class="s-body" style="padding:4px 8px 2px 8px">
+    <canvas id="c-pi" style="flex:1;width:100%;min-height:0;border-radius:6px"></canvas>
+  </div>
+  <div class="s-foot au fi db">關鍵：牛皮因高交聯度採 <strong>Type B 鹼處理</strong>；豬骨/牛骨同理。只有 Type B 才能實現 VLP/HVLP 所需的精準 pI 設計。</div>
+</div>
+<!-- ========== SLIDE 10: 動畫 — 晶面與熱力學 ========== -->
+<div class="slide" id="s8">
+  <div class="s-header">
+    <div class="s-title au fd d0">05 &nbsp;GELITA 雙核心護城河：電荷控制 × 空間障礙</div>
+    <div class="s-sub   au fi d1">pI 死釘 4.7–5.2 (Type B 脫醯胺) &nbsp;×&nbsp; PDI → 1.0 (專利酵素精剪) — 化學不可複製性</div>
+  </div>
+  <div class="divider au fi d1"></div>
+  <div class="s-body" style="flex-direction:row;gap:10px;overflow:hidden">
+
+    <!-- LEFT: pI / Charge Control -->
+    <div style="width:47%;flex-shrink:0;display:flex;flex-direction:column;gap:6px;overflow:hidden">
+      <div style="font-size:clamp(.8rem,.95vw,.88rem);font-weight:700;color:var(--tl);letter-spacing:.03em">
+        ① 電荷控制：pI 精準定位
+      </div>
+
+      <!-- Type A comparison -->
+      <div class="kbox au fd d1" style="border-color:var(--rd);padding:8px 10px">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+          <span style="font-size:clamp(.78rem,.9vw,.84rem);font-weight:700;color:var(--rd)">✗ 一般豬皮（Type A，酸處理）</span>
+        </div>
+        <div style="font-size:clamp(.69rem,.78vw,.74rem);color:var(--gr);line-height:1.5">
+          酸處理 <strong style="color:var(--wt)">保留</strong> Asn / Gln 側鏈醯胺基 →
+          鹼性 / 中性殘基大量存在<br>
+          pI 分佈混亂：<span style="color:var(--rd);font-weight:600">7 ～ 9</span>
+          → 工作 pH 下強正電，過度吸附銅面 →
+          <em style="color:var(--rd)">局部厚積、黑點</em>
+        </div>
+        <div style="margin-top:5px;height:8px;background:linear-gradient(90deg,var(--rd)80%,transparent 100%);border-radius:3px;opacity:.5"></div>
+        <div style="display:flex;justify-content:space-between;font-size:clamp(.68rem,.76vw,.73rem);color:var(--gr);margin-top:1px">
+          <span>pI 7</span><span>9</span>
+        </div>
+      </div>
+
+      <!-- Deamidation arrow -->
+      <div style="text-align:center;font-size:clamp(.72rem,.82vw,.78rem);color:var(--gr)">
+        <span style="color:var(--tl);font-weight:700">GELITA 鹼處理（Type B）↓ 脫醯胺作用</span>
+      </div>
+
+      <!-- Deamidation reaction -->
+      <div class="kbox au fd d1" style="border-color:var(--cu2);padding:7px 10px">
+        <div style="font-size:clamp(.7rem,.8vw,.76rem);color:var(--gr);line-height:1.7;font-family:monospace">
+          Asn (–CONH₂) <span style="color:var(--cu2)">→</span> <strong style="color:var(--tl)">Asp (–COO⁻)</strong><br>
+          Gln (–CONH₂) <span style="color:var(--cu2)">→</span> <strong style="color:var(--tl)">Glu (–COO⁻)</strong>
+        </div>
+        <div style="font-size:clamp(.67rem,.76vw,.72rem);color:var(--gr);margin-top:3px">
+          +NH₃ 釋放 → 酸性殘基增加 → 整體 pI 下移
+        </div>
+      </div>
+
+      <!-- GELITA result -->
+      <div class="kbox au fd d1" style="border-color:var(--tl);padding:8px 10px">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+          <span style="font-size:clamp(.78rem,.9vw,.84rem);font-weight:700;color:var(--tl)">✓ GELITA 牛皮/牛骨（Type B，鹼處理）</span>
+        </div>
+        <div style="font-size:clamp(.69rem,.78vw,.74rem);color:var(--gr);line-height:1.5">
+          脫醯胺將 pI 精準釘在
+          <span style="color:var(--tl);font-weight:700">4.7 ～ 5.2</span><br>
+          工作 pH 4–5 下：分子帶
+          <strong style="color:var(--tl)">精準微正電</strong> —
+          剛好足夠吸附，<em>不</em>過度覆蓋 → 均勻整平
+        </div>
+        <div style="margin-top:5px;height:8px;background:linear-gradient(90deg,var(--tl) 0%,var(--tl) 25%,transparent 26%);border-radius:3px;opacity:.7"></div>
+        <div style="display:flex;justify-content:space-between;font-size:clamp(.68rem,.76vw,.73rem);color:var(--tl);margin-top:1px">
+          <span>pI 4.7</span><span style="color:var(--gr)">5.2 ↑ 釘住此區間</span>
+        </div>
+      </div>
+
+    </div><!-- end left -->
+
+    <!-- RIGHT: PDI / Spatial Barrier + Canvas -->
+    <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
+      <div style="font-size:clamp(.8rem,.95vw,.88rem);font-weight:700;color:var(--cu2);letter-spacing:.03em">
+        ② 空間障礙：PDI 逼近 1.0
+      </div>
+
+      <canvas id="c-gelita-pdi" style="flex:1;border-radius:8px;background:#0a0f1a;min-height:0;width:100%"></canvas>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <div class="kbox au fd d2" style="border-color:var(--rd);padding:6px 10px">
+          <div style="font-size:clamp(.74rem,.84vw,.8rem);font-weight:700;color:var(--rd)">✗ 一般熱萃取</div>
+          <div style="font-size:clamp(.67rem,.76vw,.72rem);color:var(--gr);line-height:1.4;margin-top:3px">
+            分子量分佈極寬<br>
+            <span style="color:var(--rd)">PDI ≫ 1.0</span><br>
+            大分子→局部空洞<br>
+            小分子→不均勻
+          </div>
+        </div>
+        <div class="kbox au fd d2" style="border-color:var(--tl);padding:6px 10px">
+          <div style="font-size:clamp(.74rem,.84vw,.8rem);font-weight:700;color:var(--tl)">✓ GELITA 酵素精剪</div>
+          <div style="font-size:clamp(.67rem,.76vw,.72rem);color:var(--gr);line-height:1.4;margin-top:3px">
+            專利酵素靶向剪切<br>
+            <span style="color:var(--tl)">PDI → 1.0</span><br>
+            單一分子量分佈<br>
+            均勻覆蓋 → 零黑點
+          </div>
+        </div>
+      </div>
+    </div><!-- end right -->
+
+  </div><!-- s-body -->
+  <div class="s-foot au fi d2">護城河公式：Type B 脫醯胺（不可逆化學改性）× 專利酵素工藝（不可複製）= 雙鎖定競爭壁壘</div>
+</div>
+
+<div class="slide" id="s9">
+  <div class="s-header">
+    <div class="s-title au fd d0">06 &nbsp;研發主管沒注意到的三個「技術盲區」</div>
+    <div class="s-sub   au fi d1">這些盲區，正是切入差異化銷售的黃金切入點</div>
+  </div>
+  <div class="divider au fi d1"></div>
+  <div class="s-body">
+    <div class="g3">
+      <!-- Blind Spot 1 -->
+      <div class="card au fr d2" style="border-color:var(--yl);border-width:2px">
+        <div class="c-head" style="background:var(--yl);color:var(--bg)">盲區 01 — 被 Mw 欺騙</div>
+        <div class="c-body">
+          <div class="au fu d3 gr" style="font-style:italic">「我們的明膠平均分子量符合規格」</div>
+          <div class="au fu d4 gr" style="font-style:italic">—— 這是最常見的誤判說詞</div>
+          <div class="au fu d5" style="margin-top:4px;background:rgba(250,204,21,.08);border:1px solid rgba(250,204,21,.3);border-radius:3px;padding:3px 6px">
+            <span class="yl bold">PDI</span> = <span class="wt">Polydispersity Index</span><br>
+            <span class="gr" style="font-size:.88em">多分散性指數 — 描述分子量分佈的寬窄</span><br>
+            <span class="yl" style="font-size:.88em">PDI = M<sub>w</sub> / M<sub>n</sub>　→　越接近 1.0 越均一</span>
+          </div>
+          <div class="au fu d6" style="margin-top:4px">PDI 發散導致奈米級沉積缺陷：</div>
+          <div class="au fu d7 gr">　大分子堆積 → 局部過抑制 → 黑點</div>
+          <div class="au fu d8 gr">　小分子空洞 → 局部欠覆蓋 → 針孔</div>
+          <div class="au fu d9 yl bold" style="margin-top:4px">正確 KPI：PDI 值，而非單純的 Mw</div>
+        </div>
+      </div>
+      <!-- Blind Spot 2 -->
+      <div class="card au fu d3" style="border-color:var(--tl);border-width:2px">
+        <div class="c-head" style="background:var(--tl);color:var(--bg)">盲區 02 — 晶界工程被忽視</div>
+        <div class="c-body">
+          <div class="au fu d4 gr" style="font-style:italic">「添加劑只是把表面弄平」</div>
+          <div class="au fu d5" style="margin-top:6px">添加劑的真實影響：</div>
+          <div class="au fu d6 tl">　改變晶面生長方向 (111)→(200)</div>
+          <div class="au fu d7 tl">　打碎柱狀晶，孕育等軸晶</div>
+          <div class="au fu d8">　提升抗拉強度 (TS) 與延展性 (El%)</div>
+          <div class="au fu d9 tl bold" style="margin-top:6px">不談晶界工程，就是在賣半套方案</div>
+        </div>
+      </div>
+      <!-- Blind Spot 3 -->
+      <div class="card au fl d2" style="border-color:var(--cu2);border-width:2px">
+        <div class="c-head" style="background:var(--cu2);color:var(--bg)">盲區 03 — 吸脫附的毫秒級肉搏</div>
+        <div class="c-body">
+          <div class="au fu d3 gr" style="font-style:italic">「正電荷不是越強越好」</div>
+          <div class="au fu d4" style="margin-top:6px">胜肽吸附能必須處於臨界點</div>
+          <div class="au fu d5">若吸附太強：</div>
+          <div class="au fu d6 rd">　SPS <span class="dsj">雙硫鍵</span>無法在毫秒內置換</div>
+          <div class="au fu d7 rd">　油門與煞車相互鎖死</div>
+          <div class="au fu d8 rd">　填谷機制完全失效</div>
+          <div class="au fu d9 cu bold" style="margin-top:6px">pI 精控（Type B）的真實商業價值</div>
+        </div>
+      </div>
+    </div>
+    <div class="kbox au fu da">銷售技巧：「請問您目前如何評估整平劑 PDI 對銅箔結晶結構的影響？」— 一個問題打開高層技術對話</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 12: 結語 ========== -->
+<div class="slide" id="s10">
+  <div class="s-header">
+    <div class="s-title au fd d0">07 &nbsp;結語與差異化定位</div>
+  </div>
+  <div class="divider au fi d1"></div>
+  <div class="s-body" style="justify-content:center;gap:10px">
+    <div class="card au fr d2" style="border-color:var(--cu);border-width:1.5px;flex-direction:row;align-items:center">
+      <div style="background:var(--cu);width:48px;min-width:48px;align-self:stretch;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:bold;color:var(--bg)">1</div>
+      <div style="padding:10px 14px">
+        <div class="cu bold" style="font-size:clamp(.9rem,1.4vw,1.1rem)">表面 → 結構</div>
+        <div style="font-size:clamp(.88rem,1.05vw,.96rem);margin-top:4px">高階銅箔添加劑不只改變 Rz，更改變晶粒形態與機械性質（晶界工程）</div>
+      </div>
+    </div>
+    <div class="card au fu d3" style="border-color:var(--cu);border-width:1.5px;flex-direction:row;align-items:center">
+      <div style="background:var(--cu);width:48px;min-width:48px;align-self:stretch;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:bold;color:var(--bg)">2</div>
+      <div style="padding:10px 14px">
+        <div class="cu bold" style="font-size:clamp(.9rem,1.4vw,1.1rem)">Mw → PDI</div>
+        <div style="font-size:clamp(.88rem,1.05vw,.96rem);margin-top:4px">正確的品質 KPI 是多分散性指數 PDI，而非平均分子量 Mw</div>
+      </div>
+    </div>
+    <div class="card au fl d4" style="border-color:var(--cu);border-width:1.5px;flex-direction:row;align-items:center">
+      <div style="background:var(--cu);width:48px;min-width:48px;align-self:stretch;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:bold;color:var(--bg)">3</div>
+      <div style="padding:10px 14px">
+        <div class="cu bold" style="font-size:clamp(.9rem,1.4vw,1.1rem)">靜態 → 動態　<span style="color:#FBBF24;font-size:.8em">（加速劑 SPS 的核心機制）</span></div>
+        <div style="font-size:clamp(.88rem,1.05vw,.96rem);margin-top:4px"><span class="dsj">SPS 的雙硫鍵（<span style="font-family:monospace">−S−S−</span>）</span>驅動的毫秒級吸脫附平衡，負責加速谷底銅沉積，填平微凹坑</div>
+      </div>
+    </div>
+    <!-- Collagen peptide key role card -->
+    <div class="card au fu d5" style="border-color:#4ADE80;border-width:1.5px;flex-direction:row;align-items:center">
+      <div style="background:#4ADE80;width:48px;min-width:48px;align-self:stretch;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:bold;color:var(--bg)">4</div>
+      <div style="padding:10px 14px">
+        <div style="color:#4ADE80;font-weight:bold;font-size:clamp(.9rem,1.4vw,1.1rem)">為什麼膠原蛋白胜肽（Leveler）才是您的銷售重點？</div>
+        <div style="font-size:clamp(.88rem,1.05vw,.96rem);margin-top:4px;color:#EEF4FB">
+          PEG（抑制劑）與 SPS（加速劑）均已商品化且高度標準化 — 差異化幾乎為零。<br>
+          <span style="color:#4ADE80;font-weight:bold">膠原蛋白胜肽是唯一需要精準設計 PDI、pI、胺基酸序列的三維知識壁壘添加劑：</span><br>
+          ① PDI → 1.0　均一覆蓋，消除缺陷　②　pI 精控　決定電場吸附強度<br>
+          ③ Gly-Pro-Hyp 序列　原子級鎖定 (111) 晶面　→　等軸晶孕育
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end #deck -->
+
+<!-- ===================================================
+     NAV BAR
+=================================================== -->
+<div id="prog"><div id="pfill"></div></div>
+<div id="nav">
+  <!-- Breadcrumb row -->
+  <div id="breadcrumb">
+    <span class="bc-pill bc-m1" id="bc1">① 戰場：趨膚效應</span>
+    <span class="bc-sep">›</span>
+    <span class="bc-pill bc-m2" id="bc2">② 賽局：推拉平衡</span>
+    <span class="bc-sep">›</span>
+    <span class="bc-pill bc-m3" id="bc3">③ 武器：PDI ＆ pI 精控</span>
+    <span class="bc-sep">›</span>
+    <span class="bc-pill bc-m4" id="bc4">④ 降維：晶面工程</span>
+  </div>
+  <!-- Controls row -->
+  <div id="nav-controls">
+    <button class="nb" id="btnPrev" onclick="go(-1)">◀ 上一頁</button>
+    <div id="dots"></div>
+    <span id="ctr">1 / 13</span>
+    <button class="nb" id="btnNext" onclick="go(1)">下一頁 ▶</button>
+  </div>
+</div>
+
+<!-- ===================================================
+     JAVASCRIPT
+=================================================== -->
+<script>
+/* ======================================================
+   SLIDE MANAGER
+====================================================== */
+const TOTAL = 10;
+let cur = 0;
+let animFrameId = { plating: null, crystal: null, helix: null, mfg: null, pi: null, gelita: null, xtal: null };
+
+const slides = Array.from(document.querySelectorAll('.slide'));
+const pfill  = document.getElementById('pfill');
+const ctr    = document.getElementById('ctr');
+const dotsEl = document.getElementById('dots');
+
+// Build dots
+for (let i = 0; i < TOTAL; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot';
+  d.onclick = () => goTo(i);
+  dotsEl.appendChild(d);
+}
+const dotEls = dotsEl.querySelectorAll('.dot');
+
+function goTo(idx) {
+  if (idx < 0 || idx >= TOTAL) return;
+  const prev = cur;
+  cur = idx;
+
+  // Remove exit/active from all
+  slides.forEach(s => { s.classList.remove('active','exit'); });
+
+  // Mark previous slide as exiting briefly
+  if (prev !== cur) {
+    slides[prev].classList.add('exit');
+    setTimeout(() => slides[prev].classList.remove('exit'), 400);
+  }
+
+  // Activate new slide
+  slides[cur].classList.add('active');
+
+  // Update progress & counter
+  pfill.style.width = ((cur + 1) / TOTAL * 100) + '%';
+  ctr.textContent = (cur + 1) + ' / ' + TOTAL;
+  dotEls.forEach((d, i) => d.classList.toggle('on', i === cur));
+  updateBreadcrumb();
+
+  document.getElementById('btnPrev').disabled = cur === 0;
+  document.getElementById('btnNext').disabled = cur === TOTAL - 1;
+
+  // Manage canvas animations
+  if (cur === 2)  startMfg();      // slide 3 (index 2) — manufacturing process
+  else            stopCanvas('mfg');
+
+  if (cur === 4) {  // merged: additives + plating
+    if (prev !== 4) setPlatingPhase(0);
+    startPlating();
+  } else { stopCanvas('plating'); }
+
+  if (cur === 5) { startHelix(); startXtal(); }  // merged helix + crystal (index 5)
+  else { stopCanvas('helix'); stopCanvas('xtal'); }
+
+  if (cur === 6)  startPiAnim();   // pI (index 6)
+  else            stopCanvas('pi');
+
+  if (cur === 7)  startGelitaPdi();  // GELITA dual-moat (index 7)
+  else            stopCanvas('gelita');
+}
+
+/* Crystal phase (0-3) for slide 12 (index 11) */
+let crystalPhase = 0;
+const CRYSTAL_PHASES = 4;
+
+function go(dir) {
+  goTo(cur + dir);
+}
+
+/* ── Breadcrumb updater ── */
+// slide index → module (0=none, 1–4)
+let platingPhase = 0;
+function setPlatingPhase(n) {
+  platingPhase = n;
+  document.querySelectorAll('.pl-btn').forEach(function(b, i) {
+    b.classList.toggle('pl-btn-on', i === n);
+  });
+  const LABELS = ['▸ 階段一','▸ 階段二','▸ 階段三'];
+  const COLORS = ['var(--bl)','var(--cu2)','var(--yl)'];
+  const DESCS  = [
+    '無添加劑：Cu²⁺ 隨機沉積 — 山峰持續竄高，谷底永遠無法填平',
+    'PEG 全面覆蓋 · 胜肽精準鎖住山峰頂 — 峰頂完全阻斷新沉積',
+    '⚡ S─S 雙硫鍵斷裂 → Cu⁺ 錯合催化 → 毫秒級填谷啟動——這是一場肉搏戰！',
+  ];
+  var lel = document.getElementById('plating-ph-label');
+  var del = document.getElementById('plating-ph-desc');
+  if (lel) { lel.textContent = LABELS[n]; lel.style.color = COLORS[n]; }
+  if (del) del.textContent = DESCS[n];
+}
+
+const SLIDE_MODULE = [0,0,0,  1,  2,  4,3,  0,  0,0];
+function updateBreadcrumb() {
+  const m = SLIDE_MODULE[cur] || 0;
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById('bc' + i);
+    el.classList.remove('bc-on','bc-dim');
+    if      (m === 0) { /* no module — all dimmed */ el.classList.add('bc-dim'); }
+    else if (m === i) { el.classList.add('bc-on'); }
+    else              { el.classList.add('bc-dim'); }
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft'  || e.key === 'PageUp')  { e.preventDefault(); go(-1); }
+  if (e.key === 'Home') goTo(0);
+  if (e.key === 'End')  goTo(TOTAL - 1);
+});
+
+// Touch swipe
+let tx0 = 0;
+document.addEventListener('touchstart', e => { tx0 = e.touches[0].clientX; }, { passive:true });
+document.addEventListener('touchend',   e => {
+  const dx = e.changedTouches[0].clientX - tx0;
+  if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+}, { passive:true });
+
+// Init
+goTo(0);
+
+/* ======================================================
+   CANVAS UTILITIES
+====================================================== */
+function resizeCanvas(canvas) {
+  const r = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth;
+  const h = canvas.clientHeight;
+  if (canvas.width !== w * r || canvas.height !== h * r) {
+    canvas.width  = w * r;
+    canvas.height = h * r;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(r, r);
+  }
+  return { w, h };
+}
+
+function stopCanvas(which) {
+  if (animFrameId[which]) {
+    cancelAnimationFrame(animFrameId[which]);
+    animFrameId[which] = null;
+  }
+}
+
+/* ======================================================
+   CANVAS 1 — ELECTROPLATING (Slide 6)
+====================================================== */
+function startPlating() {
+  stopCanvas('plating');
+  const canvas = document.getElementById('c-plating');
+  if (!canvas) return;
+
+  const COLS = 60;
+  // sin²: peaks at col 10,30,50 (value=1); valleys at col 0,20,40,60 (value=0)
+  const baseH = Array.from({length: COLS}, (_, i) =>
+    Math.pow(Math.sin(i / COLS * Math.PI * 3), 2)
+  );
+
+  // Cu²⁺ ions for phase 0
+  let sparks = Array.from({length: 22}, () => ({
+    x: Math.random(), vy: 0.35 + Math.random() * 0.7, life: Math.random()
+  }));
+
+  let t = 0, lastPhase = -1, phaseLocalT = 0;
+
+  function draw() {
+    if (platingPhase !== lastPhase) { lastPhase = platingPhase; phaseLocalT = 0; }
+    else phaseLocalT++;
+
+    const { w, h } = resizeCanvas(canvas);
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, w, h);
+
+    const phase       = platingPhase;
+    const peakGrowth  = phase === 0 ? Math.min(1, phaseLocalT / 160) : 1;
+    const valleyFill  = phase === 2 ? Math.min(0.96, phaseLocalT / 240) : 0;
+
+    const FLOOR_Y = h * 0.80;
+    const BASE_H  = h * 0.20;   // height of un-grown profile
+    const PEAK_H  = h * 0.12;   // extra growth on peaks / fill on valleys
+    const colW    = w / COLS;
+
+    // Surface Y: lower Y = higher on screen = more copper deposited
+    const surfY = baseH.map(bh => {
+      const base      = FLOOR_Y - BASE_H * bh;
+      const peakDelta = PEAK_H  * bh       * peakGrowth;   // peaks grow up
+      const fillRise  = PEAK_H  * (1 - bh) * valleyFill;   // valleys rise up
+      return base - peakDelta - fillRise;   // subtract = move UP on canvas ✓
+    });
+
+    // ── Substrate ─────────────────────────────────────────────────────
+    const subGrad = ctx.createLinearGradient(0, FLOOR_Y, 0, h);
+    subGrad.addColorStop(0, '#1a3a3a');
+    subGrad.addColorStop(1, '#081010');
+    ctx.fillStyle = subGrad;
+    ctx.fillRect(0, FLOOR_Y, w, h - FLOOR_Y);
+
+    // ── Copper body ───────────────────────────────────────────────────
+    ctx.beginPath();
+    ctx.moveTo(0, surfY[0]);
+    for (let i = 1; i < COLS; i++) {
+      const cx = (i - 0.5) * colW;
+      ctx.lineTo(cx, surfY[i - 1]);
+      ctx.lineTo(cx, surfY[i]);
+    }
+    ctx.lineTo(w, surfY[COLS - 1]);
+    ctx.lineTo(w, h); ctx.lineTo(0, h);
+    ctx.closePath();
+    const cuGrad = ctx.createLinearGradient(0, Math.min(...surfY), 0, FLOOR_Y);
+    cuGrad.addColorStop(0, '#f59e0b');
+    cuGrad.addColorStop(0.35, '#d97706');
+    cuGrad.addColorStop(0.75, '#b45309');
+    cuGrad.addColorStop(1, '#7c2d12');
+    ctx.fillStyle = cuGrad;
+    ctx.fill();
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    const fs = (f) => Math.max(10, Math.round(w * f));
+
+    // ═══ PHASE 0 — 無添加劑：Cu²⁺ 亂撒，峰頂持續竄高 ════════════════
+    if (phase === 0) {
+      for (const s of sparks) {
+        s.life += s.vy * 0.013;
+        if (s.life >= 1) { s.life = 0; s.x = Math.random(); s.vy = 0.35 + Math.random() * 0.7; }
+        const sx  = s.x * w;
+        const col = Math.min(COLS - 1, Math.floor(s.x * COLS));
+        const sy  = h * 0.03 + (surfY[col] - h * 0.03) * s.life;
+        const alp = Math.sin(s.life * Math.PI);
+        ctx.beginPath();
+        ctx.arc(sx, sy, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle   = `rgba(251,191,36,${alp.toFixed(2)})`;
+        ctx.fill();
+        ctx.strokeStyle = `rgba(253,224,71,${(alp * 0.6).toFixed(2)})`;
+        ctx.lineWidth = 0.8; ctx.stroke();
+        if (s.life < 0.28) {
+          ctx.fillStyle = `rgba(253,224,71,${(alp * 0.95).toFixed(2)})`;
+          ctx.font = `bold ${fs(0.017)}px sans-serif`;
+          ctx.fillText('Cu²⁺', sx + 5, sy - 3);
+        }
+      }
+      // Rz annotation between first peak (col 10) and valley (col 20)
+      if (phaseLocalT > 50) {
+        const fade = Math.min(1, (phaseLocalT - 50) / 35);
+        const pkX  = 10 * colW + colW * 0.5, pkY = surfY[10];
+        const vlX  = 20 * colW + colW * 0.5, vlY = surfY[20];
+        ctx.strokeStyle = `rgba(239,68,68,${fade})`;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 3]);
+        ctx.beginPath(); ctx.moveTo(pkX, pkY); ctx.lineTo(vlX, pkY); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(vlX, pkY); ctx.lineTo(vlX, vlY); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = `rgba(239,68,68,${fade})`;
+        ctx.font      = `bold ${fs(0.022)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText('Rz ↕', vlX + colW * 2.5, (pkY + vlY) / 2 + 4);
+        ctx.textAlign = 'left';
+      }
+      // top label
+      ctx.fillStyle = 'rgba(203,213,225,0.9)';
+      ctx.font      = `bold ${fs(0.023)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText('無添加劑 — 峰頂失控竄高', w * 0.5, h * 0.06);
+      ctx.textAlign = 'left';
+    }
+
+    // ═══ PHASE 1 — 煞車部署：PEG 全面 + 胜肽死鎖山頂 ══════════════════
+    if (phase === 1) {
+      const fade = Math.min(1, phaseLocalT / 35);
+
+      // PEG hexagonal mesh
+      ctx.strokeStyle = `rgba(148,163,184,${(fade * 0.3).toFixed(2)})`;
+      ctx.lineWidth = 0.9;
+      const hex = 16;
+      for (let gy = -hex; gy < h; gy += hex * 1.5) {
+        for (let gx = -hex; gx < w + hex; gx += hex * 1.73) {
+          for (let side = 0; side < 6; side++) {
+            const a1 = side / 6 * Math.PI * 2, a2 = (side + 1) / 6 * Math.PI * 2;
+            ctx.beginPath();
+            ctx.moveTo(gx + Math.cos(a1) * hex, gy + Math.sin(a1) * hex);
+            ctx.lineTo(gx + Math.cos(a2) * hex, gy + Math.sin(a2) * hex);
+            ctx.stroke();
+          }
+        }
+      }
+      ctx.fillStyle = `rgba(203,213,225,${(fade * 0.85).toFixed(2)})`;
+      ctx.font      = `${fs(0.021)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText('PEG 擴散屏障', w * 0.14, h * 0.07);
+      ctx.textAlign = 'left';
+
+      // NH₃⁺ peptide blocks ON peak tops (cols 10, 30, 50)
+      const peakCols = [10, 30, 50];
+      for (const pc of peakCols) {
+        const bw2  = colW * 5.5;
+        const bh2  = h * 0.068;
+        const bx2  = pc * colW + colW * 0.5 - bw2 / 2;
+        const by2  = surfY[pc] - bh2;   // block sits flush on peak top ✓
+        ctx.fillStyle   = `rgba(180,83,9,${(fade * 0.88).toFixed(2)})`;
+        ctx.strokeStyle = `rgba(251,146,60,${fade.toFixed(2)})`;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.roundRect(bx2, by2, bw2, bh2, 4);
+        ctx.fill(); ctx.stroke();
+        ctx.fillStyle = `rgba(255,237,213,${fade.toFixed(2)})`;
+        ctx.font      = `bold ${fs(0.019)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText('NH₃⁺', bx2 + bw2 / 2, by2 + bh2 * 0.48);
+        ctx.font      = `${fs(0.016)}px sans-serif`;
+        ctx.fillText('▼ STOP', bx2 + bw2 / 2, by2 + bh2 * 0.85);
+        ctx.textAlign = 'left';
+      }
+
+      // top label
+      ctx.fillStyle = `rgba(251,146,60,${(fade * 0.9).toFixed(2)})`;
+      ctx.font      = `bold ${fs(0.023)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText('胜肽封鎖山頂 · PEG 全面抑制', w * 0.5, h * 0.06);
+      ctx.fillStyle = `rgba(203,213,225,${(fade * 0.75).toFixed(2)})`;
+      ctx.font      = `${fs(0.018)}px sans-serif`;
+      ctx.fillText('山峰沉積速率 ↓  比①無添加劑慢（PEG + Cl⁻ 協同抑制）', w * 0.5, h * 0.11);
+      ctx.textAlign = 'left';
+    }
+
+    // ═══ PHASE 2 — ⚡ 雙硫鍵：谷底催化，銅面向上填平 ═══════════════════
+    if (phase === 2) {
+      const fade = Math.min(1, phaseLocalT / 25);
+
+      // PEG ghost mesh
+      ctx.strokeStyle = 'rgba(148,163,184,0.1)';
+      ctx.lineWidth = 0.7;
+      const hex = 16;
+      for (let gy = -hex; gy < h; gy += hex * 1.5) {
+        for (let gx = -hex; gx < w + hex; gx += hex * 1.73) {
+          for (let side = 0; side < 6; side++) {
+            const a1 = side / 6 * Math.PI * 2, a2 = (side + 1) / 6 * Math.PI * 2;
+            ctx.beginPath();
+            ctx.moveTo(gx + Math.cos(a1) * hex, gy + Math.sin(a1) * hex);
+            ctx.lineTo(gx + Math.cos(a2) * hex, gy + Math.sin(a2) * hex);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // SPS S─S bond IN valley (col 20, a true valley) ✓
+      const vCol = 20;
+      const vSx  = vCol * colW + colW * 0.5;
+      const vSy  = surfY[vCol] - h * 0.055;  // just above valley surface
+      const osc  = (phaseLocalT % 55) / 55;
+      const bAlp = 0.55 + 0.45 * Math.sin(osc * Math.PI * 2);
+      const rSPS = Math.max(6, h * 0.027);
+
+      // Left S
+      ctx.beginPath(); ctx.arc(vSx - rSPS * 1.6, vSy, rSPS, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(250,204,21,${bAlp.toFixed(2)})`; ctx.fill();
+      ctx.fillStyle = '#0a0f1a';
+      ctx.font = `bold ${Math.round(rSPS * 1.15)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText('S', vSx - rSPS * 1.6, vSy + rSPS * 0.38);
+      // Right S
+      ctx.beginPath(); ctx.arc(vSx + rSPS * 1.6, vSy, rSPS, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(250,204,21,${bAlp.toFixed(2)})`; ctx.fill();
+      ctx.fillStyle = '#0a0f1a';
+      ctx.fillText('S', vSx + rSPS * 1.6, vSy + rSPS * 0.38);
+      ctx.textAlign = 'left';
+      // Double bond
+      ctx.strokeStyle = `rgba(250,204,21,${bAlp.toFixed(2)})`; ctx.lineWidth = 2.2;
+      ctx.beginPath(); ctx.moveTo(vSx - rSPS * 0.55, vSy - 2.5); ctx.lineTo(vSx + rSPS * 0.55, vSy - 2.5); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(vSx - rSPS * 0.55, vSy + 2.5); ctx.lineTo(vSx + rSPS * 0.55, vSy + 2.5); ctx.stroke();
+
+      // Lightning flash on entry
+      if (phaseLocalT < 80) {
+        const fAlp = 1 - phaseLocalT / 80;
+        ctx.fillStyle = `rgba(253,224,71,${fAlp.toFixed(2)})`;
+        ctx.font      = `bold ${Math.round(h * 0.1)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText('⚡', vSx, vSy - h * 0.07);
+        ctx.textAlign = 'left';
+      }
+
+      // NH₃⁺ ghost blocks still on peaks (PEG still active in Phase 2)
+      const peakCols2 = [10, 30, 50];
+      for (const pc of peakCols2) {
+        const bw3  = colW * 5.5, bh3 = h * 0.055;
+        const bx3  = pc * colW + colW * 0.5 - bw3 / 2;
+        const by3  = surfY[pc] - bh3;
+        ctx.fillStyle   = `rgba(180,83,9,${(fade * 0.55).toFixed(2)})`;
+        ctx.strokeStyle = `rgba(251,146,60,${(fade * 0.65).toFixed(2)})`;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath(); ctx.roundRect(bx3, by3, bw3, bh3, 4);
+        ctx.fill(); ctx.stroke();
+        ctx.fillStyle = `rgba(255,237,213,${(fade * 0.7).toFixed(2)})`;
+        ctx.font      = `bold ${fs(0.017)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText('NH₃⁺', bx3 + bw3 / 2, by3 + bh3 * 0.48);
+        ctx.font = `${fs(0.013)}px sans-serif`;
+        ctx.fillText('▼STOP', bx3 + bw3 / 2, by3 + bh3 * 0.88);
+        ctx.textAlign = 'left';
+      }
+
+      // SPS + Cu²⁺ catalytic combination (vSx valley, col 20)
+      // Cu²⁺ falls into valley → captured by S─S → deposits (green flash)
+      const spsComboLife = ((phaseLocalT + 10) % 110) / 110;
+      const scx = vSx, scy = surfY[vCol];    // valley surface centre
+      if (spsComboLife < 0.38) {
+        // Cu²⁺ falling toward S─S bond
+        const prog = spsComboLife / 0.38;
+        const s_ry = scy - h * 0.26 + (h * 0.20) * prog;
+        const s_alp = Math.sin(prog * Math.PI) * fade;
+        ctx.beginPath(); ctx.arc(scx, s_ry, 4, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(251,191,36,${s_alp.toFixed(2)})`; ctx.fill();
+        ctx.fillStyle = `rgba(253,224,71,${s_alp.toFixed(2)})`;
+        ctx.font = `bold ${fs(0.017)}px sans-serif`; ctx.textAlign='center';
+        ctx.fillText('Cu²⁺', scx, s_ry - 7);
+        ctx.textAlign = 'left';
+      } else if (spsComboLife < 0.60) {
+        // Catalytic combination flash at S─S
+        const prog  = (spsComboLife - 0.38) / 0.22;
+        const fAlp  = Math.sin(prog * Math.PI) * fade;
+        // expanding glow
+        ctx.beginPath(); ctx.arc(scx, vSy, rSPS * (1.5 + prog * 2.5), 0, Math.PI*2);
+        ctx.fillStyle = `rgba(74,222,128,${(fAlp * 0.55).toFixed(2)})`; ctx.fill();
+        ctx.fillStyle = `rgba(253,224,71,${fAlp.toFixed(2)})`;
+        ctx.font = `bold ${Math.max(10,Math.round(h*0.026))}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText('S─S + Cu²⁺', scx, vSy - rSPS * 3.2);
+        ctx.fillStyle = `rgba(74,222,128,${fAlp.toFixed(2)})`;
+        ctx.font = `bold ${Math.max(10,Math.round(h*0.022))}px sans-serif`;
+        ctx.fillText('→ Cu 沉積⚡', scx, vSy - rSPS * 1.6);
+        ctx.textAlign = 'left';
+      }
+      // (after 0.60: Cu deposited → valley rises via valleyFill)
+
+      // Cu²⁺ ions raining — SLOWER & SPARSER than Phase 0 (PEG+Cl overall suppression) ✓
+      // Phase 0: 22 sparks fast / Phase 2: 7 ions slow → visually shows suppression
+      const rainSeed = Math.floor(phaseLocalT / 5) % 40;
+      for (let ri = 0; ri < 7; ri++) {
+        const seed  = (ri * 73 + rainSeed * 17) % 200;
+        const xFrac = (seed / 200);
+        const rCol  = Math.min(COLS - 1, Math.floor(xFrac * COLS));
+        // strongly bias toward valleys; peaks mostly blocked
+        if (Math.random() < baseH[rCol] * 0.80) continue;
+        const rx    = xFrac * w;
+        const rLife = ((phaseLocalT + ri * 37) % 90) / 90;  // period 90 = slower drop
+        const ry    = h * 0.04 + (surfY[rCol] - h * 0.04) * rLife;
+        const rAlp  = Math.sin(rLife * Math.PI) * fade;
+        ctx.beginPath();
+        ctx.arc(rx, ry, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle   = `rgba(251,191,36,${rAlp.toFixed(2)})`;
+        ctx.fill();
+        if (rLife < 0.30) {
+          ctx.fillStyle = `rgba(253,224,71,${(rAlp * 0.9).toFixed(2)})`;
+          ctx.font      = `bold ${fs(0.016)}px sans-serif`;
+          ctx.fillText('Cu²⁺', rx + 5, ry - 3);
+        }
+      }
+      // Rejected ions at peaks — slow 3-phase: approach → hover (blocked) → rise
+      // Period 160 frames so ion spends ~35 frames visibly parked near the surface
+      for (let ri = 0; ri < 3; ri++) {
+        const rCol   = [10, 30, 50][ri];           // one ion per peak column
+        const rx     = rCol * colW + colW * 0.5;
+        const period = 160;
+        const rejLife = ((phaseLocalT + ri * 54) % period) / period; // 0→1
+        const peakSurf = surfY[rCol];
+        const startY   = peakSurf - h * 0.24;     // spawn point above
+        const hoverY   = peakSurf - h * 0.072;    // clearly above surface
+        let ry, rAlp;
+        if (rejLife < 0.30) {
+          // Phase A: slowly fall toward peak
+          const prog = rejLife / 0.30;
+          ry   = startY + (hoverY - startY) * prog;
+          rAlp = prog * fade;
+        } else if (rejLife < 0.62) {
+          // Phase B: hover near surface (blocked) — gentle oscillation
+          const osc = Math.sin((rejLife - 0.30) / 0.32 * Math.PI * 2) * h * 0.010;
+          ry   = hoverY + osc;
+          rAlp = fade;
+        } else {
+          // Phase C: slowly drift back up and fade
+          const prog = (rejLife - 0.62) / 0.38;
+          ry   = hoverY - (startY - hoverY) * prog;
+          rAlp = (1 - prog) * fade * 0.85;
+        }
+        if (rAlp < 0.04) continue;
+        // Ion dot — brighter during hover phase
+        const dotR  = (rejLife >= 0.30 && rejLife < 0.62) ? 5.5 : 3.5;
+        const dotClr = (rejLife >= 0.30 && rejLife < 0.62)
+          ? `rgba(253,224,71,${rAlp.toFixed(2)})`
+          : `rgba(251,146,60,${rAlp.toFixed(2)})`;
+        ctx.beginPath(); ctx.arc(rx, ry, dotR, 0, Math.PI*2);
+        ctx.fillStyle = dotClr; ctx.fill();
+        // Dark bg rect for "Cu²⁺" text — always visible
+        const labelW = 34, labelH = 14;
+        ctx.fillStyle = `rgba(4,12,28,${(rAlp*0.75).toFixed(2)})`;
+        ctx.fillRect(rx - labelW/2, ry - dotR - labelH - 2, labelW, labelH);
+        ctx.fillStyle = `rgba(253,224,71,${rAlp.toFixed(2)})`;
+        ctx.font = `bold ${fs(0.018)}px sans-serif`; ctx.textAlign='center';
+        ctx.fillText('Cu²⁺', rx, ry - dotR - 6);
+        // "✕ 受阻" only while hovering
+        if (rejLife >= 0.30 && rejLife < 0.62) {
+          ctx.fillStyle = `rgba(4,12,28,${(rAlp*0.7).toFixed(2)})`;
+          ctx.fillRect(rx - 28, ry + dotR + 2, 56, 15);
+          ctx.fillStyle = `rgba(244,63,94,${rAlp.toFixed(2)})`;
+          ctx.font = `bold ${fs(0.017)}px sans-serif`;
+          ctx.fillText('✕ 受阻', rx, ry + dotR + 13);
+        }
+        ctx.textAlign = 'left';
+      }
+
+      // Green UP arrows in all valleys [3, 20, 40, 57] ✓
+      const vlCols = [3, 20, 40, 57];
+      for (const vc of vlCols) {
+        if (vc >= COLS) continue;
+        const ax    = vc * colW + colW * 0.5;
+        const ay    = surfY[vc];                         // start from current surface
+        const aH    = h * 0.07 * valleyFill;             // arrow grows as valleys fill
+        if (aH < 3) continue;
+        ctx.strokeStyle = `rgba(34,197,94,${(fade * 0.9).toFixed(2)})`;
+        ctx.lineWidth   = 2.5;
+        ctx.beginPath(); ctx.moveTo(ax, ay + 2); ctx.lineTo(ax, ay - aH); ctx.stroke();
+        // arrowhead
+        ctx.fillStyle = `rgba(34,197,94,${(fade * 0.9).toFixed(2)})`;
+        ctx.beginPath();
+        ctx.moveTo(ax,     ay - aH);
+        ctx.lineTo(ax - 5, ay - aH + 8);
+        ctx.lineTo(ax + 5, ay - aH + 8);
+        ctx.closePath(); ctx.fill();
+      }
+
+      // Progress bar (top-center, safe position)
+      const pct  = valleyFill;
+      const barW = w * 0.54, barX = w * 0.23, barY2 = h * 0.055, barH2 = h * 0.03;
+      ctx.fillStyle   = 'rgba(8,16,32,0.75)';
+      ctx.strokeStyle = 'rgba(34,197,94,0.5)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.roundRect(barX, barY2, barW, barH2, 4); ctx.fill(); ctx.stroke();
+      if (pct > 0) {
+        const fillG = ctx.createLinearGradient(barX, 0, barX + barW, 0);
+        fillG.addColorStop(0, '#22c55e'); fillG.addColorStop(1, '#10b981');
+        ctx.fillStyle = fillG;
+        ctx.beginPath(); ctx.roundRect(barX, barY2, barW * pct, barH2, 4); ctx.fill();
+      }
+      ctx.fillStyle = 'rgba(220,252,231,0.95)';
+      ctx.font      = `bold ${fs(0.021)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(`填谷進度 ${Math.round(pct * 100)}%`, barX + barW / 2, barY2 + barH2 / 2);
+      ctx.textBaseline = 'alphabetic';
+
+      // Label
+      ctx.fillStyle = `rgba(134,239,172,${fade.toFixed(2)})`;
+      ctx.font      = `bold ${fs(0.022)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText('SPS 催化填谷 — 超等角沉積 ↑', w * 0.5, h * 0.93);
+      ctx.fillStyle = `rgba(251,146,60,${(fade * 0.8).toFixed(2)})`;
+      ctx.font      = `${fs(0.019)}px sans-serif`;
+      ctx.fillText('峰頂：PEG仍抑制（慢）  │  谷底：SPS催化（快）→ 差距縮小 → 銅面整平', w * 0.5, h * 0.135);
+      ctx.textAlign = 'left';
+    }
+
+    // Rz scale (phases 1 & 2)
+    if (phase > 0) {
+      const minY = Math.min(...surfY), maxY = Math.max(...surfY);
+      if (maxY - minY > 8) {
+        ctx.fillStyle = 'rgba(148,163,184,0.5)';
+        ctx.font      = `${fs(0.019)}px sans-serif`;
+        ctx.textAlign = 'right';
+        ctx.fillText('Rz↕', w * 0.97, (minY + maxY) / 2 + 4);
+        ctx.textAlign = 'left';
+      }
+    }
+
+    t++;
+    animFrameId.plating = requestAnimationFrame(draw);
+  }
+  animFrameId.plating = requestAnimationFrame(draw);
+}
+
+
+/* ===================== MFG ANIMATION (slide 3, index 2) ===================== */
+let mfgT = 0;
+
+function startMfg() {
+  stopCanvas('mfg');
+  const canvas = document.getElementById('c-mfg');
+  if (!canvas) return;
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  const ctx = canvas.getContext('2d');
+  function draw() {
+    mfgT++;
+    const w = canvas.offsetWidth, h = canvas.offsetHeight;
+    if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+    drawMfgScene(ctx, w, h);
+    animFrameId.mfg = requestAnimationFrame(draw);
+  }
+  animFrameId.mfg = requestAnimationFrame(draw);
+}
+
+function mfgArrow(ctx, x, y, len, t_, label) {
+  const pulse = 0.5 + 0.5 * Math.sin(t_ * 0.05);
+  for (let d = 0; d < 3; d++) {
+    const pr = ((t_ * 0.013 + d * 0.33) % 1);
+    const dx = x + pr * (len - 14);
+    ctx.beginPath(); ctx.arc(dx, y, 3, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(56,189,248,${0.4 + 0.5 * pulse})`; ctx.fill();
+  }
+  ctx.strokeStyle = 'rgba(56,189,248,0.35)'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + len - 12, y); ctx.stroke();
+  ctx.fillStyle = '#38BDF8';
+  ctx.beginPath(); ctx.moveTo(x+len, y); ctx.lineTo(x+len-10,y-5); ctx.lineTo(x+len-10,y+5); ctx.closePath(); ctx.fill();
+  if (label) {
+    ctx.fillStyle = '#7E8FA3'; ctx.textAlign = 'center';
+    ctx.font = Math.max(7, 8) + 'px Calibri,sans-serif';
+    ctx.fillText(label, x + len/2, y - 9);
+  }
+}
+
+function drawMfgScene(ctx, w, h) {
+  const t = mfgT;
+  ctx.fillStyle = '#08131E'; ctx.fillRect(0,0,w,h);
+
+  /* ── layout ── */
+  const TH  = h * 0.13;                     // top label band
+  const AY  = TH, AH = h - TH - h * 0.07;  // main drawing area
+  const midY = AY + AH * 0.52;
+
+  const S1X = w * 0.01, S1W = w * 0.26;    // dissolution tank
+  const GAP1 = w * 0.035;
+  const S2X = S1X + S1W + GAP1, S2W = w * 0.09; // filter
+  const GAP2 = w * 0.03;
+  const S3X = S2X + S2W + GAP2;            // drum section fills rest
+  const S3W = w - S3X - w * 0.01;
+
+  const fs  = (scale) => Math.max(10, h * scale) + 'px Calibri,sans-serif';
+  const fbs = (scale) => 'bold ' + Math.max(10, h * scale) + 'px Calibri,sans-serif';
+
+  /* ══════════════════════════════════════
+     SECTION HEADERS
+  ══════════════════════════════════════ */
+  function secHead(cx, title, sub, col) {
+    ctx.fillStyle = col; ctx.textAlign = 'center';
+    ctx.font = fbs(0.065); ctx.fillText(title, cx, TH * 0.52);
+    ctx.fillStyle = '#9BAFC4'; ctx.font = fs(0.045); ctx.fillText(sub, cx, TH * 0.86);
+  }
+
+  /* ══════════════════════════════════════
+     SECTION 1 — Dissolution Tank
+  ══════════════════════════════════════ */
+  const T1Y = AY + AH * 0.04, T1H = AH * 0.90;
+
+  /* Tank outline */
+  ctx.fillStyle = '#0D1E2E';
+  ctx.strokeStyle = '#C07228'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.roundRect(S1X, T1Y, S1W, T1H, 6); ctx.fill(); ctx.stroke();
+
+  /* Liquid fill (blue CuSO4) */
+  const LiqY = T1Y + T1H * 0.13, LiqH = T1H * 0.84;
+  const lG = ctx.createLinearGradient(0, LiqY, 0, LiqY + LiqH);
+  lG.addColorStop(0, 'rgba(50,110,190,.22)'); lG.addColorStop(1, 'rgba(25,65,130,.40)');
+  ctx.fillStyle = lG;
+  ctx.beginPath(); ctx.roundRect(S1X+2, LiqY, S1W-4, LiqH, 4); ctx.fill();
+  ctx.fillStyle = 'rgba(56,189,248,.55)'; ctx.textAlign='center';
+  ctx.font = fs(0.036); ctx.fillText('H₂SO₄ 電解液', S1X+S1W*.5, LiqY + LiqH*.10);
+
+  /* Copper chunks */
+  const CHUNKS = [
+    {nx:.22,ny:.48,s:1.0,v:6}, {nx:.65,ny:.44,s:.85,v:5},
+    {nx:.42,ny:.63,s:.92,v:6}, {nx:.18,ny:.76,s:.75,v:5},
+    {nx:.71,ny:.70,s:.80,v:6}, {nx:.50,ny:.83,s:.72,v:5},
+  ];
+  CHUNKS.forEach(({nx,ny,s,v}, i) => {
+    const cx = S1X + S1W * nx, cy = LiqY + LiqH * ny;
+    const r  = h * 0.065 * s;
+    const wob = Math.sin(t * 0.022 + i * 1.5) * 0.04;
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(wob);
+    ctx.beginPath();
+    for (let k = 0; k < v; k++) {
+      const a = (k/v)*Math.PI*2 + i*.5;
+      const jt = .72 + .28 * Math.sin(a*2.1+i);
+      k===0 ? ctx.moveTo(Math.cos(a)*r*jt, Math.sin(a)*r*jt*.72)
+            : ctx.lineTo(Math.cos(a)*r*jt, Math.sin(a)*r*jt*.72);
+    }
+    ctx.closePath();
+    const cg = ctx.createRadialGradient(-r*.25,-r*.2,r*.05, 0,0,r);
+    cg.addColorStop(0,'#F0A050'); cg.addColorStop(.6,'#C07228'); cg.addColorStop(1,'#7A3A10');
+    ctx.fillStyle = cg; ctx.fill();
+    ctx.strokeStyle = '#F4A050'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = '#0B1825'; ctx.font = fbs(0.030); ctx.textAlign='center';
+    ctx.fillText('Cu', 0, r*.2);
+    ctx.restore();
+  });
+
+  /* O2 bubbles */
+  for (let b = 0; b < 11; b++) {
+    const ph = ((t * 0.65 + b * 19.3) % 100) / 100;
+    const bx = S1X + S1W * (.12 + (b * .079) % .76);
+    const by = LiqY + LiqH * (1 - ph * .94);
+    const br = Math.max(2, 2.5 + b%3);
+    const ba = Math.min(1, ph * 3.5) * .55;
+    ctx.beginPath(); ctx.arc(bx,by,br,0,Math.PI*2);
+    ctx.strokeStyle = `rgba(200,230,255,${ba})`; ctx.lineWidth=.8; ctx.stroke();
+    ctx.fillStyle   = `rgba(220,240,255,${ba*.3})`; ctx.fill();
+    if (b%3===0 && ph<.45) { ctx.fillStyle=`rgba(170,210,255,${ba*.8})`; ctx.font=fs(.026); ctx.textAlign='center'; ctx.fillText('O₂',bx,by-br-2); }
+  }
+
+  /* Cu2+ ions drifting */
+  for (let i = 0; i < 9; i++) {
+    const ix = S1X + S1W*(.15 + ((i*.105 + t*.0035)%0.72));
+    const iy = LiqY + LiqH*(.22 + ((i*.125 + t*.0025)%0.62));
+    const pr = .55 + .45*Math.sin(t*.05+i);
+    ctx.beginPath(); ctx.arc(ix,iy,Math.max(3,h*.017),0,Math.PI*2);
+    ctx.fillStyle=`rgba(192,114,40,${pr*.9})`; ctx.fill();
+    ctx.fillStyle='#FBBF24'; ctx.font=fs(.026); ctx.textAlign='center';
+    ctx.fillText('Cu²⁺',ix,iy-Math.max(3,h*.017)-2);
+  }
+
+  /* Reaction equation below tank */
+  ctx.fillStyle='rgba(232,149,58,.85)'; ctx.textAlign='center'; ctx.font=fbs(.046);
+  ctx.fillText('Cu + H₂SO₄ + ½O₂ → CuSO₄', S1X+S1W*.5, T1Y+T1H+h*.048);
+
+  secHead(S1X+S1W*.5, '① 銅塊溶解槽', '充氣 · 硫酸溶銅 · Cu²⁺ 生成', '#C07228');
+
+  /* ── flow arrow 1 ── */
+  mfgArrow(ctx, S1X+S1W+4, midY, GAP1+S2W*.04+4, t, '泵送');
+
+  /* ══════════════════════════════════════
+     SECTION 2 — Filter
+  ══════════════════════════════════════ */
+  const FX=S2X, FW=S2W, FH=AH*.54, FY=AY+AH*.23;
+
+  ctx.fillStyle='#0D1E2E'; ctx.strokeStyle='#4ADE80'; ctx.lineWidth=1.8;
+  ctx.beginPath(); ctx.roundRect(FX,FY,FW,FH,5); ctx.fill(); ctx.stroke();
+
+  /* filter media lines */
+  for (let r=0; r<5; r++) {
+    const ly=FY+FH*(.22+r*.14);
+    ctx.strokeStyle='rgba(74,222,128,.25)'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(FX+4,ly); ctx.lineTo(FX+FW-4,ly); ctx.stroke();
+  }
+  /* dirty particles */
+  [{nx:.28,ny:.38},{nx:.68,ny:.46},{nx:.42,ny:.58},{nx:.72,ny:.65}].forEach(({nx,ny})=>{
+    ctx.beginPath(); ctx.arc(FX+FW*nx, FY+FH*ny, Math.max(2,h*.010),0,Math.PI*2);
+    ctx.fillStyle='#F43F5E'; ctx.fill();
+  });
+  /* clean drips */
+  for (let d=0; d<3; d++) {
+    const dp=((t*.5+d*20)%60)/60;
+    const dx=FX+FW*(.3+d*.2), dy=FY+FH+dp*18;
+    if (dp<.75) { ctx.beginPath(); ctx.arc(dx,dy,Math.max(2,h*.010),0,Math.PI*2); ctx.fillStyle='rgba(56,189,248,.7)'; ctx.fill(); }
+  }
+  ctx.fillStyle='#4ADE80'; ctx.textAlign='center'; ctx.font=fbs(.036);
+  ctx.fillText('過濾', FX+FW*.5, FY+FH*.17);
+
+  secHead(FX+FW*.5, '② 過濾', '雜質去除', '#4ADE80');
+
+  /* ── flow arrow 2 ── */
+  mfgArrow(ctx, S2X+S2W+4, midY, GAP2+4, t+15, '純液入槽');
+
+  /* ══════════════════════════════════════
+     SECTION 3 — Electrolytic Cell + Drum
+  ══════════════════════════════════════ */
+  const CX=S3X, CW=S3W;
+  const drumCX = CX + CW * 0.42;
+  const drumCY = AY + AH * 0.40;
+  const drumR  = Math.min(CW * 0.27, AH * 0.36);
+  const troughTop = AY + AH * 0.44;
+  const troughBot = AY + AH * 0.95;
+
+  /* Electrolyte trough */
+  const tG = ctx.createLinearGradient(0,troughTop,0,troughBot);
+  tG.addColorStop(0,'rgba(40,90,160,.28)'); tG.addColorStop(1,'rgba(20,55,120,.40)');
+  ctx.fillStyle=tG; ctx.strokeStyle='#1A3A5A'; ctx.lineWidth=1.8;
+  ctx.beginPath(); ctx.roundRect(CX, troughTop, CW*.85, troughBot-troughTop, 6); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='rgba(56,189,248,.55)'; ctx.textAlign='center'; ctx.font=fbs(.042);
+  ctx.fillText('CuSO₄ + H₂SO₄ 電解液', CX+CW*.43, troughBot-h*.08);
+  ctx.fillStyle='rgba(251,191,36,.72)'; ctx.font=fs(.030); ctx.textAlign='center';
+  ctx.fillText('⚡ 50–65 °C  ／  40–80 A/dm²', CX+CW*.43, troughBot-h*.045);
+
+  /* Anode plates */
+  const anodeH=AH*.30, anodeW=CW*.055, anodeY=drumCY-anodeH*.5;
+  [[CX+CW*.05,'#F43F5E'],[CX+CW*.78,'#F43F5E']].forEach(([ax,col])=>{
+    ctx.fillStyle=`rgba(244,63,94,.18)`; ctx.strokeStyle=col; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.roundRect(ax,anodeY,anodeW,anodeH,3); ctx.fill(); ctx.stroke();
+    ctx.fillStyle=col; ctx.textAlign='center'; ctx.font=fbs(.038);
+    ctx.fillText('⊕',ax+anodeW*.5, anodeY-8);
+    ctx.fillStyle='#7E8FA3'; ctx.font=fs(.030);
+    ctx.fillText('DSA陽極',ax+anodeW*.5, anodeY-20);
+  });
+
+  /* Cu2+ ions migrating to drum */
+  for (let i=0; i<12; i++) {
+    const ang = ((t*.011 + i*.52) % Math.PI) + Math.PI;
+    const dist = drumR * (1.14 + (i%4)*.085);
+    const ix = drumCX + Math.cos(ang)*dist;
+    const iy = drumCY + Math.sin(ang)*dist*.78;
+    if (iy>troughTop+8 && iy<troughBot-10 && ix>CX+anodeW+10 && ix<CX+CW*.82) {
+      const al = .5+.5*Math.sin(t*.04+i*.7);
+      ctx.beginPath(); ctx.arc(ix,iy,Math.max(3,h*.016),0,Math.PI*2);
+      ctx.fillStyle=`rgba(192,114,40,${al*.9})`; ctx.fill();
+      if (i%3===0){ctx.fillStyle='#FBBF24';ctx.font=fs(.026);ctx.textAlign='center';ctx.fillText('Cu²⁺',ix,iy-Math.max(3,h*.016)-2);}
+      /* drift arrow */
+      const ta=Math.atan2(drumCY-iy,drumCX-ix);
+      ctx.strokeStyle=`rgba(192,114,40,${al*.25})`; ctx.lineWidth=.7; ctx.setLineDash([2,2]);
+      ctx.beginPath(); ctx.moveTo(ix,iy); ctx.lineTo(ix+Math.cos(ta)*10,iy+Math.sin(ta)*10); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  /* Drum glow */
+  const dGlo=ctx.createRadialGradient(drumCX,drumCY,drumR*.6,drumCX,drumCY,drumR*1.25);
+  dGlo.addColorStop(0,'rgba(56,189,248,.06)'); dGlo.addColorStop(1,'rgba(56,189,248,0)');
+  ctx.fillStyle=dGlo; ctx.beginPath(); ctx.arc(drumCX,drumCY,drumR*1.25,0,Math.PI*2); ctx.fill();
+
+  /* Drum body */
+  const da=t*.016;
+  const dGrad=ctx.createRadialGradient(drumCX-drumR*.22,drumCY-drumR*.22,drumR*.08,drumCX,drumCY,drumR);
+  dGrad.addColorStop(0,'#2E608A'); dGrad.addColorStop(.65,'#1B3D5E'); dGrad.addColorStop(1,'#0D1929');
+  ctx.fillStyle=dGrad; ctx.strokeStyle='#38BDF8'; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.arc(drumCX,drumCY,drumR,0,Math.PI*2); ctx.fill(); ctx.stroke();
+
+  /* Drum rotation marks */
+  for (let r=0; r<12; r++) {
+    const ra=da+r*Math.PI/6;
+    ctx.strokeStyle='rgba(56,189,248,.18)'; ctx.lineWidth=.8;
+    ctx.beginPath(); ctx.moveTo(drumCX+Math.cos(ra)*drumR*.52,drumCY+Math.sin(ra)*drumR*.52);
+    ctx.lineTo(drumCX+Math.cos(ra)*drumR*.88,drumCY+Math.sin(ra)*drumR*.88); ctx.stroke();
+  }
+
+  /* ⊖ cathode label */
+  ctx.fillStyle='#38BDF8'; ctx.textAlign='center';
+  ctx.font=fbs(0.09); ctx.fillText('⊖',drumCX, drumCY+drumR*.14);
+  ctx.font=fbs(0.052); ctx.fillStyle='#7E8FA3';
+  ctx.fillText('鈦陰極滾筒',drumCX, drumCY+drumR*.40);
+  ctx.fillStyle='rgba(56,189,248,.65)'; ctx.font=fs(.040);
+  ctx.fillText('（緩慢旋轉 · 銅沉積）',drumCX, drumCY+drumR*.58);
+
+  /* e⁻ electrons flowing from drum interior to surface, meeting Cu²⁺ */
+  for (let ei = 0; ei < 9; ei++) {
+    const eAngle = Math.PI + Math.PI * ((ei / 9) * 0.82 + 0.09); // bottom arc
+    const eProg  = ((t * 0.022 + ei * 0.13) % 1);               // 0→1 center→surface
+    const eRpath = drumR * (0.18 + 0.82 * eProg);
+    const eX     = drumCX + Math.cos(eAngle) * eRpath;
+    const eY     = drumCY + Math.sin(eAngle) * eRpath;
+    const eAlp   = Math.sin(eProg * Math.PI) * 0.88;
+    if (eY < troughTop + 8 || eY > troughBot - 8) continue; // clip to trough
+    if (eProg > 0.86) {
+      // surface reaction flash: Cu²⁺ + 2e⁻ → Cu
+      const flash = (eProg - 0.86) / 0.14;
+      ctx.beginPath(); ctx.arc(eX, eY, (5 + flash*4), 0, Math.PI*2);
+      ctx.fillStyle = `rgba(74,222,128,${(flash*0.9).toFixed(2)})`; ctx.fill();
+    } else {
+      ctx.beginPath(); ctx.arc(eX, eY, Math.max(2, h*.012), 0, Math.PI*2);
+      ctx.fillStyle = `rgba(74,222,128,${eAlp.toFixed(2)})`; ctx.fill();
+      if (eProg < 0.45) {
+        ctx.fillStyle = `rgba(134,239,172,${eAlp.toFixed(2)})`;
+        ctx.font = 'bold ' + Math.max(7, Math.round(h*.021)) + 'px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('e⁻', eX, eY - h*.015);
+        ctx.textAlign = 'left';
+      }
+    }
+  }
+
+  /* Copper foil forming on drum (arc along bottom-left arc) */
+  ctx.strokeStyle='#E8953A'; ctx.lineWidth=4;
+  ctx.beginPath(); ctx.arc(drumCX,drumCY,drumR+3,Math.PI*.72,-Math.PI*.18,false); ctx.stroke();
+
+  /* Foil peel-off strip */
+  const peelA = -Math.PI*.18;
+  const px0 = drumCX+Math.cos(peelA)*(drumR+2);
+  const py0 = drumCY+Math.sin(peelA)*(drumR+2);
+  const peelLen = CW*.22 + 8*Math.sin(t*.025);
+  ctx.strokeStyle='#C07228'; ctx.lineWidth=3.5;
+  ctx.beginPath(); ctx.moveTo(px0,py0);
+  ctx.bezierCurveTo(px0+18,py0-14, px0+peelLen*.55,py0-10, px0+peelLen,py0-12); ctx.stroke();
+
+  /* Take-up spool */
+  const spoolX = px0+peelLen+24, spoolY = py0-14;
+  const spoolR = Math.max(14,drumR*.24)+3*Math.sin(t*.04);
+  ctx.fillStyle='#C07228'; ctx.strokeStyle='#E8953A'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.arc(spoolX,spoolY,spoolR,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  for (let rc=4; rc<spoolR; rc+=4) { ctx.strokeStyle='rgba(0,0,0,.35)'; ctx.lineWidth=.8; ctx.beginPath(); ctx.arc(spoolX,spoolY,rc,0,Math.PI*2); ctx.stroke(); }
+  ctx.fillStyle='#FBBF24'; ctx.textAlign='center'; ctx.font=fbs(.042);
+  ctx.fillText('銅箔', spoolX, spoolY-spoolR-12);
+  ctx.fillStyle='#7E8FA3'; ctx.font=fs(.030);
+  ctx.fillText('捲取成品', spoolX, spoolY-spoolR-24);
+
+  /* Deposition reaction */
+  // Cu²⁺ reaction – placed below drum with bg
+  const rxY = AY + AH * 0.985;
+  ctx.fillStyle='rgba(4,16,28,0.72)'; ctx.textAlign='center';
+  ctx.fillRect(drumCX - w*0.21, rxY - h*0.032, w*0.42, h*0.044);
+  ctx.fillStyle='rgba(56,189,248,.96)'; ctx.font=fbs(.038);
+  ctx.fillText('Cu²⁺ + 2e⁻  →  Cu↓', drumCX, rxY - h*0.006);
+  ctx.font=fs(.022); ctx.fillStyle='rgba(148,216,248,.8)';
+  ctx.fillText('銅沉積在鈦桶表面', drumCX, rxY + h*0.022);
+
+  /* DC power supply icon */
+  const psX=CX+CW*.85, psY=AY+AH*.08;
+  ctx.strokeStyle='#F43F5E'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.roundRect(psX,psY,56,30,4); ctx.stroke();
+  ctx.fillStyle='#F43F5E'; ctx.textAlign='center'; ctx.font=fbs(.040); ctx.fillText('DC',psX+28,psY+13);
+  ctx.fillStyle='#7E8FA3'; ctx.font=fs(.030); ctx.fillText('直流電源',psX+28,psY+26);
+  /* wires */
+  ctx.strokeStyle='rgba(244,63,94,.4)'; ctx.lineWidth=1.2; ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(psX+10,psY+30); ctx.lineTo(CX+CW*.09,anodeY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(psX+46,psY+30); ctx.lineTo(drumCX,drumCY-drumR); ctx.stroke();
+  ctx.setLineDash([]);
+
+  secHead(drumCX, '③ 鈦桶陰極電解', '銅沉積 · 旋轉剝離 · 捲取成品', '#38BDF8');
+}
+
+/* ===================== pI BEHAVIOR ANIMATION (slide 9, index 8) ===================== */
+let piT = 0;
+
+function startPiAnim() {
+  stopCanvas('pi');
+  const canvas = document.getElementById('c-pi');
+  if (!canvas) return;
+  function draw() {
+    piT++;
+    const { w, h } = resizeCanvas(canvas);
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0,0,w,h);
+    drawPiScene(ctx, w, h);
+    animFrameId.pi = requestAnimationFrame(draw);
+  }
+  animFrameId.pi = requestAnimationFrame(draw);
+}
+
+function drawPiScene(ctx, w, h) {
+  const t = piT;
+  ctx.fillStyle = '#08131E'; ctx.fillRect(0,0,w,h);
+
+  const midX = w * 0.5;
+  const LW = midX - 10, RX = midX + 10, RW = w - midX - 10;
+  // Reduced tank to fit all text comfortably
+  const tankH = h * 0.52, tankY = h * 0.230, tankBot = tankY + tankH;
+  const WAVES = 4, PEAK = h * 0.055;
+  const fs = (s,b) => (b?'bold ':'')+Math.max(9,h*s)+'px Calibri,sans-serif';
+
+  // ── (1) pH 資訊橫幅 (top, shared) ──
+  ctx.fillStyle='rgba(15,28,50,0.88)';
+  ctx.beginPath(); ctx.roundRect(w*.04, h*.003, w*.92, h*.084, 5); ctx.fill();
+  ctx.strokeStyle='rgba(251,191,36,.4)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.roundRect(w*.04, h*.003, w*.92, h*.084, 5); ctx.stroke();
+  ctx.fillStyle='#FBBF24'; ctx.textAlign='center'; ctx.font=fs(.048,true);
+  ctx.fillText('電鍍液 pH ≈ 1', midX, h*.040);
+  ctx.fillStyle='#F43F5E'; ctx.textAlign='left'; ctx.font=fs(.032,true);
+  ctx.fillText('pH(1) << pI(A) 7~9  →  強正電荷', w*.06, h*.076);
+  ctx.fillStyle='#4ADE80'; ctx.textAlign='right'; ctx.font=fs(.032,true);
+  ctx.fillText('pH(1) < pI(B) 4.7~5.2  →  微正電荷', w*.94, h*.076);
+
+  // ── (2) 面板標題 ──
+  ctx.fillStyle='#F43F5E'; ctx.textAlign='center'; ctx.font=fs(.055,true);
+  ctx.fillText('Type A — 酸處理  pI 7~9', LW/2, h*.152);
+  ctx.fillStyle='rgba(244,63,94,.8)'; ctx.font=fs(.033,false);
+  ctx.fillText('強正電荷 → 過度吸附山峰 → 谷底空洞', LW/2, h*.190);
+
+  ctx.fillStyle='#4ADE80'; ctx.textAlign='center'; ctx.font=fs(.055,true);
+  ctx.fillText('Type B — 鹼處理  pI 4.7~5.2', RX+RW/2, h*.152);
+  ctx.fillStyle='rgba(74,222,128,.8)'; ctx.font=fs(.033,false);
+  ctx.fillText('微正電荷 → 精準吸附 → 谷底正常填平', RX+RW/2, h*.190);
+
+  // ── (3) 中央分隔線 ──
+  ctx.strokeStyle='rgba(126,143,163,.3)'; ctx.lineWidth=1.5; ctx.setLineDash([5,4]);
+  ctx.beginPath(); ctx.moveTo(midX,h*.003); ctx.lineTo(midX,h*.997); ctx.stroke(); ctx.setLineDash([]);
+
+  // ── (4) 槽體繪製函式 ──
+  function drawTank(ox, tw, pIhigh) {
+    const tG = ctx.createLinearGradient(0,tankY,0,tankBot);
+    tG.addColorStop(0,'rgba(20,55,110,.22)'); tG.addColorStop(1,'rgba(10,35,80,.40)');
+    ctx.fillStyle=tG; ctx.strokeStyle='rgba(56,189,248,.2)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.roundRect(ox+2,tankY,tw-4,tankH,4); ctx.fill(); ctx.stroke();
+
+    // Cu 表面輪廓
+    const osc = Math.sin(t * 0.03) * 2;
+    ctx.beginPath(); ctx.moveTo(ox, tankY);
+    for (let yy = tankY; yy <= tankBot; yy += 2) {
+      const wave = Math.sin((yy-tankY)*WAVES*2*Math.PI/tankH) * PEAK + osc;
+      ctx.lineTo(ox + tw - 24 - wave, yy);
+    }
+    ctx.lineTo(ox+tw, tankBot); ctx.lineTo(ox+tw, tankY); ctx.closePath();
+    const cuG = ctx.createLinearGradient(ox+tw-PEAK*3,0,ox+tw,0);
+    cuG.addColorStop(0,'#C07228'); cuG.addColorStop(1,'#7A3A10');
+    ctx.fillStyle=cuG; ctx.fill();
+    // Cu surface edge label
+    ctx.fillStyle='rgba(192,114,40,.65)'; ctx.textAlign='center'; ctx.font=fs(.026,false);
+    ctx.fillText('Cu面', ox+tw-8, tankBot-4);
+
+    // 胜肽吸附（山頂）
+    for (let i = 0; i < WAVES; i++) {
+      const peakY = tankY + tankH*(i+.25)/WAVES;
+      const wave  = Math.sin((peakY-tankY)*WAVES*2*Math.PI/tankH) * PEAK;
+      const px    = ox + tw - 24 - wave - 14;
+      const sz    = pIhigh ? 18 : 10;
+      ctx.fillStyle = pIhigh ? '#F43F5E' : '#E8953A';
+      ctx.globalAlpha = 0.9;
+      ctx.beginPath(); ctx.roundRect(px-sz*.55, peakY-sz*.45, sz*1.1, sz*.9, 3); ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = '#fff'; ctx.font = fs(.027, true); ctx.textAlign='center';
+      ctx.fillText(pIhigh ? '胜肽++' : '胜肽+', px, peakY+4);
+      if (pIhigh) {
+        ctx.fillStyle='rgba(244,63,94,.82)'; ctx.font=fs(.022,false);
+        ctx.fillText('過度吸附!', px, peakY-sz*.5-5);
+      }
+    }
+
+    // 谷底行為
+    for (let i = 0; i < WAVES-1; i++) {
+      const valY = tankY + tankH*(i+.75)/WAVES;
+      const wave = Math.sin((valY-tankY)*WAVES*2*Math.PI/tankH) * PEAK;
+      const vx   = ox + tw - 24 - wave + 18;
+      if (pIhigh) {
+        const holeA = 0.5 + 0.5*Math.sin(t*.05+i);
+        ctx.fillStyle=`rgba(244,63,94,${holeA*.5})`;
+        ctx.beginPath(); ctx.arc(vx, valY, PEAK*0.65, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle='#F87171';
+        ctx.font=fs(.030,true); ctx.textAlign='center';
+        ctx.fillText('空洞', vx, valY+4);
+        ctx.font=fs(.022,false); ctx.fillStyle='rgba(244,63,94,.88)';
+        ctx.fillText('Cu²⁺未填', vx, valY+16);
+      } else {
+        const fa = 0.6+0.4*Math.abs(Math.sin(t*.06+i));
+        const fG2 = ctx.createRadialGradient(vx,valY,0,vx,valY,PEAK*0.75);
+        fG2.addColorStop(0,`rgba(74,222,128,${fa*.7})`); fG2.addColorStop(1,'rgba(74,222,128,0)');
+        ctx.fillStyle=fG2; ctx.beginPath(); ctx.arc(vx,valY,PEAK*0.75,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle=`rgba(250,204,21,${fa})`;
+        ctx.font=fs(.032,true); ctx.textAlign='center';
+        ctx.fillText('⚡填平', vx, valY+4);
+      }
+    }
+
+    // Cu²⁺ 離子 + 流向箭頭
+    for (let j = 0; j < 10; j++) {
+      const seed = j*73.5;
+      const ix = ox + 8 + ((t*.5+seed*6)%(tw-40));
+      const iy = tankY + 10 + ((seed*11.3)%((tankH-20)));
+      const r  = 2.5+(j%3);
+      const g3 = ctx.createRadialGradient(ix,iy,0,ix,iy,r);
+      g3.addColorStop(0,'rgba(100,210,255,.95)'); g3.addColorStop(1,'rgba(56,189,248,.2)');
+      ctx.beginPath(); ctx.arc(ix,iy,r,0,Math.PI*2); ctx.fillStyle=g3; ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,.78)'; ctx.font=fs(.024,false); ctx.textAlign='left';
+      ctx.fillText('²⁺',ix+r,iy-2);
+      // 流向箭頭
+      if (j%2===0) {
+        const ww2 = Math.sin((iy-tankY)*WAVES*2*Math.PI/tankH)*PEAK;
+        const surfX2 = ox+tw-24-ww2;
+        const dist2 = surfX2 - ix;
+        if (dist2 > 10) {
+          // Type A: 短箭（受阻），Type B: 長箭（暢通）
+          const arrowLen = pIhigh ? Math.min(dist2*.22, 11) : Math.min(dist2*.60, 22);
+          const arrowCol = pIhigh ? 'rgba(244,63,94,.65)' : 'rgba(74,222,128,.82)';
+          ctx.strokeStyle=arrowCol; ctx.lineWidth=1.3;
+          ctx.beginPath(); ctx.moveTo(ix+r, iy); ctx.lineTo(ix+r+arrowLen, iy); ctx.stroke();
+          ctx.fillStyle=arrowCol;
+          ctx.beginPath();
+          ctx.moveTo(ix+r+arrowLen+4,iy);
+          ctx.lineTo(ix+r+arrowLen,iy-3);
+          ctx.lineTo(ix+r+arrowLen,iy+3);
+          ctx.closePath(); ctx.fill();
+          // Type A: show block X symbol near peak region
+          if (pIhigh && j===2) {
+            ctx.fillStyle='rgba(244,63,94,.7)'; ctx.font=fs(.024,true); ctx.textAlign='center';
+            ctx.fillText('✕', ix+r+arrowLen+10, iy+1);
+          }
+        }
+      }
+    }
+    ctx.globalAlpha=1;
+  }
+
+  drawTank(2, LW-2, true);
+  drawTank(RX, RW-2, false);
+
+  // ── (5) 底部機制說明框 ──
+  const boxY = tankBot + h*.014;
+  const boxH = h*.208;
+
+  // Type A 發黑起霧機制
+  ctx.fillStyle='rgba(42,12,18,0.85)';
+  ctx.beginPath(); ctx.roundRect(2, boxY, LW-4, boxH, 5); ctx.fill();
+  ctx.strokeStyle='rgba(244,63,94,.35)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.roundRect(2, boxY, LW-4, boxH, 5); ctx.stroke();
+  ctx.fillStyle='#F43F5E'; ctx.textAlign='center'; ctx.font=fs(.037,true);
+  ctx.fillText('銅箔發黑起霧機制', LW/2, boxY+h*.040);
+  ctx.fillStyle='#EEF4FB'; ctx.font=fs(.029,false);
+  ctx.fillText('谷底空洞 → 銅層不均 → 表面粗糙 (Rz ↑)', LW/2, boxY+h*.072);
+  ctx.fillText('→ 裸銅局部氧化 → CuO（黑色）生成', LW/2, boxY+h*.102);
+  ctx.fillStyle='rgba(244,63,94,.95)'; ctx.font=fs(.033,true);
+  ctx.fillText('→ 銅箔發黑起霧 ／ 高頻訊號損耗 ↑', LW/2, boxY+h*.136);
+  ctx.fillStyle='rgba(251,191,36,.82)'; ctx.font=fs(.025,false);
+  ctx.fillText('Type A pI 7~9 → 強正電荷過吸附 → 無法避免', LW/2, boxY+h*.167);
+  ctx.fillStyle='rgba(148,163,184,.7)'; ctx.font=fs(.023,false);
+  ctx.fillText('（CCL廠 HVLP/VLP 銅箔良率低根本原因）', LW/2, boxY+h*.194);
+
+  // Type B 良率優勢
+  ctx.fillStyle='rgba(12,42,18,0.85)';
+  ctx.beginPath(); ctx.roundRect(RX, boxY, RW-4, boxH, 5); ctx.fill();
+  ctx.strokeStyle='rgba(74,222,128,.35)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.roundRect(RX, boxY, RW-4, boxH, 5); ctx.stroke();
+  ctx.fillStyle='#4ADE80'; ctx.textAlign='center'; ctx.font=fs(.037,true);
+  ctx.fillText('HVLP/VLP 高良率機制', RX+RW/2, boxY+h*.040);
+  ctx.fillStyle='#EEF4FB'; ctx.font=fs(.029,false);
+  ctx.fillText('谷底完整填平 → Cu 均勻沉積', RX+RW/2, boxY+h*.072);
+  ctx.fillText('→ 表面平整 (Rz ↓) → 無氧化死角', RX+RW/2, boxY+h*.102);
+  ctx.fillStyle='rgba(74,222,128,.95)'; ctx.font=fs(.033,true);
+  ctx.fillText('→ 銅箔光亮 ／ 低損耗 ／ 良率提升', RX+RW/2, boxY+h*.136);
+  ctx.fillStyle='rgba(251,191,36,.82)'; ctx.font=fs(.025,false);
+  ctx.fillText('GELITA Type B pI 4.7~5.2 → 精準電荷設計', RX+RW/2, boxY+h*.167);
+  ctx.fillStyle='rgba(148,163,184,.7)'; ctx.font=fs(.023,false);
+  ctx.fillText('（脫醯胺專利技術 — 化學不可複製性）', RX+RW/2, boxY+h*.194);
+}
+
+/* ===================== HELIX ANIMATION (slide 7, index 6) ===================== */
+let helixT = 0;
+
+function startXtal() {
+  stopCanvas('xtal');
+  const canvas = document.getElementById('c-xtal');
+  if (!canvas) return;
+  let t = 0;
+
+  // Atom lattice seed positions
+  // Left half = columnar (1D stacking), Right half = equiaxed (multi-directional)
+  function draw() {
+    const { w, h } = resizeCanvas(canvas);
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, w, h);
+
+    const mid = w * 0.5;
+    const R = Math.max(3, w * 0.022);    // atom radius
+    const growPeriod = 180;              // frames for full growth
+
+    // ── Background halves ─────────────────────────────────────────
+    ctx.fillStyle = 'rgba(239,68,68,0.05)';
+    ctx.fillRect(0, 0, mid, h);
+    ctx.fillStyle = 'rgba(45,212,191,0.05)';
+    ctx.fillRect(mid, 0, mid, h);
+
+    // ── Divider ───────────────────────────────────────────────────
+    ctx.strokeStyle = 'rgba(100,116,139,0.4)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath(); ctx.moveTo(mid, 0); ctx.lineTo(mid, h); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // ── Labels ────────────────────────────────────────────────────
+    const fs = Math.round(w * 0.026);
+    ctx.textAlign = 'center';
+    ctx.font = 'bold ' + fs + 'px sans-serif';
+    ctx.fillStyle = 'rgba(239,68,68,0.8)';
+    ctx.fillText('柱狀晶', mid * 0.5, h * 0.09);
+    ctx.fillStyle = 'rgba(45,212,191,0.8)';
+    ctx.fillText('等軸晶', mid + mid * 0.5, h * 0.09);
+    ctx.font = Math.round(w * 0.021) + 'px sans-serif';
+    ctx.fillStyle = 'rgba(239,68,68,0.55)';
+    ctx.fillText('(111) dominant', mid * 0.5, h * 0.15);
+    ctx.fillStyle = 'rgba(45,212,191,0.55)';
+    ctx.fillText('(111)+(200)+(220)', mid + mid * 0.5, h * 0.15);
+    ctx.textAlign = 'left';
+
+    const progress = Math.min(1, t / growPeriod);
+
+    // ── LEFT: Columnar crystal (vertical stacking in columns) ──────
+    const colSpacingL = mid / 4.5;
+    const rowSpacingL = h * 0.13;
+    const maxRows = Math.floor(h * 0.72 / rowSpacingL);
+    const colsL = 3;
+
+    for (let col = 0; col < colsL; col++) {
+      const cx = mid * 0.18 + col * colSpacingL;
+      const totalAtomsInCol = Math.ceil(maxRows * progress);
+      for (let row = 0; row < totalAtomsInCol; row++) {
+        const cy = h * 0.85 - row * rowSpacingL;
+        if (cy < h * 0.18) continue;
+        const pulse = 0.75 + 0.25 * Math.sin((t - row * 8) * 0.12);
+        const alpha = row === totalAtomsInCol - 1 ? Math.min(1, (t % 15) / 15) : 1;
+        const grd = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.3, 0, cx, cy, R);
+        grd.addColorStop(0, 'rgba(251,113,133,' + (alpha * pulse).toFixed(2) + ')');
+        grd.addColorStop(1, 'rgba(190,18,60,' + (alpha * 0.6).toFixed(2) + ')');
+        ctx.beginPath();
+        ctx.arc(cx, cy, R, 0, Math.PI * 2);
+        ctx.fillStyle = grd;
+        ctx.fill();
+      }
+      // Bond lines
+      for (let row = 1; row < Math.floor(maxRows * progress); row++) {
+        const cy1 = h * 0.85 - (row - 1) * rowSpacingL;
+        const cy2 = h * 0.85 - row * rowSpacingL;
+        if (cy1 < h * 0.18 || cy2 < h * 0.18) continue;
+        ctx.strokeStyle = 'rgba(251,113,133,0.35)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(cx, cy1 - R); ctx.lineTo(cx, cy2 + R); ctx.stroke();
+      }
+    }
+
+    // ── RIGHT: Equiaxed crystal (hexagonal multi-direction) ────────
+    // Hexagonal close-packed arrangement: multiple grain orientations
+    const eqCX = mid + mid * 0.5;
+    const eqCY = h * 0.52;
+    const spacing = Math.min(mid * 0.28, h * 0.16);
+    const totalEquiaxed = Math.ceil(19 * progress);
+
+    // Hexagonal grid offsets (19 atoms in 3 rings)
+    const hexOffsets = [
+      [0, 0],
+      [1, 0], [0.5, 0.866], [-0.5, 0.866], [-1, 0], [-0.5, -0.866], [0.5, -0.866],
+      [2, 0], [1.5, 0.866], [1, 1.732], [0, 1.732], [-1, 1.732], [-1.5, 0.866],
+      [-2, 0], [-1.5, -0.866], [-1, -1.732], [0, -1.732], [1, -1.732], [1.5, -0.866]
+    ];
+    // Teal atom gradient
+    for (let i = 0; i < Math.min(totalEquiaxed, hexOffsets.length); i++) {
+      const [ox, oy] = hexOffsets[i];
+      const ax = eqCX + ox * spacing * 0.6;
+      const ay = eqCY + oy * spacing * 0.6;
+      if (ax < mid + 4 || ax > w - 4 || ay < h * 0.15 || ay > h * 0.88) continue;
+      const pulse = 0.75 + 0.25 * Math.sin((t - i * 9) * 0.1);
+      const grd = ctx.createRadialGradient(ax - R * 0.3, ay - R * 0.3, 0, ax, ay, R);
+      grd.addColorStop(0, 'rgba(94,234,212,' + pulse.toFixed(2) + ')');
+      grd.addColorStop(1, 'rgba(13,148,136,0.6)');
+      ctx.beginPath();
+      ctx.arc(ax, ay, R, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+    }
+    // Bond lines between hexagonal neighbors
+    for (let i = 1; i < Math.min(totalEquiaxed, hexOffsets.length); i++) {
+      for (let j = 0; j < i; j++) {
+        const [ox1, oy1] = hexOffsets[i];
+        const [ox2, oy2] = hexOffsets[j];
+        const dist = Math.sqrt((ox1-ox2)**2 + (oy1-oy2)**2);
+        if (dist > 1.05) continue;
+        const ax1 = eqCX + ox1 * spacing * 0.6;
+        const ay1 = eqCY + oy1 * spacing * 0.6;
+        const ax2 = eqCX + ox2 * spacing * 0.6;
+        const ay2 = eqCY + oy2 * spacing * 0.6;
+        if (ax1 < mid+4 || ax2 < mid+4) continue;
+        const dx = ax2 - ax1, dy = ay2 - ay1;
+        const d = Math.sqrt(dx*dx + dy*dy);
+        const ux = dx/d, uy = dy/d;
+        ctx.strokeStyle = 'rgba(45,212,191,0.3)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(ax1 + ux*R, ay1 + uy*R);
+        ctx.lineTo(ax2 - ux*R, ay2 - uy*R);
+        ctx.stroke();
+      }
+    }
+
+    // ── Grain direction arrows for equiaxed ────────────────────────
+    if (progress > 0.6) {
+      const fade = Math.min(1, (progress - 0.6) / 0.3);
+      const arrowAngles = [0, Math.PI/3, 2*Math.PI/3, Math.PI, 4*Math.PI/3, 5*Math.PI/3];
+      const arLen = spacing * 0.55;
+      for (const ang of arrowAngles) {
+        const ax = eqCX + Math.cos(ang) * spacing * 1.35;
+        const ay = eqCY + Math.sin(ang) * spacing * 1.35;
+        if (ax < mid + 4) continue;
+        ctx.strokeStyle = 'rgba(45,212,191,' + (fade * 0.55).toFixed(2) + ')';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(eqCX + Math.cos(ang) * R * 1.2, eqCY + Math.sin(ang) * R * 1.2);
+        ctx.lineTo(ax, ay);
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(45,212,191,' + (fade * 0.55).toFixed(2) + ')';
+        const hx = Math.cos(ang), hy = Math.sin(ang);
+        const px = -hy, py = hx;
+        ctx.beginPath();
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(ax - hx*6 + px*4, ay - hy*6 + py*4);
+        ctx.lineTo(ax - hx*6 - px*4, ay - hy*6 - py*4);
+        ctx.fill();
+      }
+    }
+
+    t++;
+    animFrameId.xtal = requestAnimationFrame(draw);
+  }
+  animFrameId.xtal = requestAnimationFrame(draw);
+}
+
+function startGelitaPdi() {
+  stopCanvas('gelita');
+  const canvas = document.getElementById('c-gelita-pdi');
+  if (!canvas) return;
+  let t = 0;
+
+  function draw() {
+    const { w, h } = resizeCanvas(canvas);
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, w, h);
+
+    const progress = Math.min(1, t / 120);
+
+    // ── Axes ──────────────────────────────────────────────────────
+    const padL = w * 0.09, padR = w * 0.06;
+    const padT = h * 0.1,  padB = h * 0.18;
+    const axW = w - padL - padR;
+    const axH = h - padT - padB;
+
+    ctx.strokeStyle = 'rgba(100,116,139,0.4)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + axH);
+    ctx.lineTo(padL + axW, padT + axH);
+    ctx.stroke();
+
+    // Axis labels
+    ctx.fillStyle = 'rgba(148,163,184,0.7)';
+    ctx.font = Math.round(w * 0.028) + 'px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('分子量 (Mw)', padL + axW * 0.5, padT + axH + padB * 0.65);
+    ctx.save(); ctx.translate(padL * 0.35, padT + axH * 0.5);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('比例', 0, 0);
+    ctx.restore();
+    ctx.textAlign = 'left';
+
+    // ── Helper: draw bell curve ────────────────────────────────────
+    function bell(cx, sigma, scaleY, fillColor, strokeColor) {
+      const steps = 200;
+      ctx.beginPath();
+      let first = true;
+      for (let i = 0; i <= steps; i++) {
+        const xFrac = i / steps;
+        const xVal  = (xFrac - 0.5) * 6; // z-score range
+        const yVal  = Math.exp(-0.5 * (xVal * xVal) / (sigma * sigma));
+        const px2   = padL + axW * xFrac;
+        const py2   = padT + axH * (1 - yVal * scaleY * progress);
+        if (first) { ctx.moveTo(px2, py2); first = false; }
+        else ctx.lineTo(px2, py2);
+      }
+      // Close path down to axis
+      ctx.lineTo(padL + axW, padT + axH);
+      ctx.lineTo(padL, padT + axH);
+      ctx.closePath();
+      ctx.fillStyle = fillColor;
+      ctx.fill();
+      ctx.strokeStyle = strokeColor;
+      ctx.lineWidth = 2.5;
+      // Redraw just the top curve line
+      ctx.beginPath();
+      first = true;
+      for (let i = 0; i <= steps; i++) {
+        const xFrac = i / steps;
+        const xVal  = (xFrac - 0.5) * 6;
+        const yVal  = Math.exp(-0.5 * (xVal * xVal) / (sigma * sigma));
+        const px2   = padL + axW * xFrac;
+        const py2   = padT + axH * (1 - yVal * scaleY * progress);
+        if (first) { ctx.moveTo(px2, py2); first = false; }
+        else ctx.lineTo(px2, py2);
+      }
+      ctx.stroke();
+    }
+
+    // Wide bell: PDI >> 1  (sigma = 1.5, centered at 0.35)
+    // We offset cx by shifting the loop; instead use two separate calls
+    // Draw wide bell (offset left)
+    function bellOffset(cxFrac, sigma, scaleY, fillColor, strokeColor) {
+      const steps = 200;
+      ctx.beginPath();
+      let first = true;
+      for (let i = 0; i <= steps; i++) {
+        const xFrac = i / steps;
+        const xVal  = (xFrac - cxFrac) / (sigma / 6);
+        const yVal  = Math.exp(-0.5 * xVal * xVal);
+        const px2   = padL + axW * xFrac;
+        const py2   = padT + axH * (1 - yVal * scaleY * progress);
+        if (first) { ctx.moveTo(px2, py2); first = false; }
+        else ctx.lineTo(px2, py2);
+      }
+      ctx.lineTo(padL + axW, padT + axH);
+      ctx.lineTo(padL, padT + axH);
+      ctx.closePath();
+      ctx.fillStyle = fillColor;
+      ctx.fill();
+      ctx.strokeStyle = strokeColor;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      first = true;
+      for (let i = 0; i <= steps; i++) {
+        const xFrac = i / steps;
+        const xVal  = (xFrac - cxFrac) / (sigma / 6);
+        const yVal  = Math.exp(-0.5 * xVal * xVal);
+        const px2   = padL + axW * xFrac;
+        const py2   = padT + axH * (1 - yVal * scaleY * progress);
+        if (first) { ctx.moveTo(px2, py2); first = false; }
+        else ctx.lineTo(px2, py2);
+      }
+      ctx.stroke();
+    }
+
+    // Wide bell (general gelatin, PDI>>1) — red/orange, wide
+    bellOffset(0.42, 0.22, 0.78, 'rgba(239,68,68,0.15)', 'rgba(239,68,68,0.7)');
+    // Narrow bell (GELITA, PDI→1) — teal, sharp
+    bellOffset(0.55, 0.07, 0.82, 'rgba(45,212,191,0.2)', 'rgba(45,212,191,0.85)');
+
+    if (progress > 0.3) {
+      const fade = Math.min(1, (progress - 0.3) / 0.4);
+      // Label wide bell
+      ctx.fillStyle = 'rgba(239,68,68,' + (fade * 0.9).toFixed(2) + ')';
+      ctx.font = 'bold ' + Math.round(w * 0.028) + 'px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('一般明膠', padL + axW * 0.28, padT + axH * 0.22);
+      ctx.font = Math.round(w * 0.024) + 'px sans-serif';
+      ctx.fillStyle = 'rgba(239,68,68,' + (fade * 0.7).toFixed(2) + ')';
+      ctx.fillText('PDI ≫ 1.0', padL + axW * 0.28, padT + axH * 0.31);
+      ctx.fillStyle = 'rgba(239,68,68,' + (fade * 0.55).toFixed(2) + ')';
+      ctx.fillText('局部空洞 · 黑點', padL + axW * 0.28, padT + axH * 0.39);
+
+      // Label narrow bell
+      ctx.fillStyle = 'rgba(45,212,191,' + (fade * 0.9).toFixed(2) + ')';
+      ctx.font = 'bold ' + Math.round(w * 0.028) + 'px sans-serif';
+      ctx.fillText('GELITA 酵素精剪', padL + axW * 0.66, padT + axH * 0.18);
+      ctx.font = Math.round(w * 0.024) + 'px sans-serif';
+      ctx.fillStyle = 'rgba(45,212,191,' + (fade * 0.7).toFixed(2) + ')';
+      ctx.fillText('PDI → 1.0', padL + axW * 0.66, padT + axH * 0.27);
+      ctx.fillStyle = 'rgba(45,212,191,' + (fade * 0.55).toFixed(2) + ')';
+      ctx.fillText('均勻覆蓋 · 零黑點', padL + axW * 0.66, padT + axH * 0.35);
+      ctx.textAlign = 'left';
+
+      // Narrow peak annotation arrow
+      const peakX = padL + axW * 0.55;
+      const peakY = padT + axH * (1 - 0.82 * progress);
+      ctx.strokeStyle = 'rgba(45,212,191,' + (fade * 0.6).toFixed(2) + ')';
+      ctx.lineWidth = 1.2;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(peakX, peakY + 4);
+      ctx.lineTo(peakX, padT + axH * 0.42);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Tick labels on x-axis
+    ctx.fillStyle = 'rgba(100,116,139,0.6)';
+    ctx.font = Math.round(w * 0.022) + 'px sans-serif';
+    ctx.textAlign = 'center';
+    for (const [frac, label] of [[0.2,'小'],[0.5,'中'],[0.8,'大']]) {
+      ctx.fillText(label, padL + axW * frac, padT + axH + padB * 0.38);
+    }
+    ctx.textAlign = 'left';
+
+    t++;
+    animFrameId.gelita = requestAnimationFrame(draw);
+  }
+  animFrameId.gelita = requestAnimationFrame(draw);
+}
+
+function startHelix() {
+  stopCanvas('helix');
+  const canvas = document.getElementById('c-helix');
+  if (!canvas) return;
+  canvas.width  = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  const ctx = canvas.getContext('2d');
+  function draw() {
+    helixT++;
+    const w = canvas.offsetWidth, h = canvas.offsetHeight;
+    if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+    drawHelixScene(ctx, w, h);
+    animFrameId.helix = requestAnimationFrame(draw);
+  }
+  animFrameId.helix = requestAnimationFrame(draw);
+}
+
+function drawHelixScene(ctx, w, h) {
+  ctx.fillStyle = '#0B1825'; ctx.fillRect(0,0,w,h);
+  const ao = helixT * 0.016;
+  const cx  = w * 0.5;
+  const hTop = h * 0.04, hBot = h * 0.66;
+  const hLen = hBot - hTop;
+  const rBase = Math.min(w * 0.20, h * 0.16);
+  const turns = 4;
+  const steps = 180;
+
+  const strands = [
+    { phase: 0,              r: rBase,        color: '#4ADE80', label:'GLY' },
+    { phase: Math.PI*2/3,    r: rBase * 0.82, color: '#38BDF8', label:'PRO' },
+    { phase: Math.PI*4/3,    r: rBase * 0.64, color: '#FBBF24', label:'HYP' },
+  ];
+
+  // Draw H-bonds between strands
+  const bondStep = Math.floor(steps / (turns * 3));
+  ctx.setLineDash([3,3]);
+  ctx.strokeStyle = 'rgba(255,255,255,0.10)'; ctx.lineWidth = 1;
+  for (let i = 0; i <= steps; i += bondStep) {
+    const prog = i / steps;
+    const pts = strands.map(({phase, r}) => ({
+      x: cx + Math.cos(phase + ao + prog * Math.PI * 2 * turns) * r,
+      y: hTop + prog * hLen
+    }));
+    for (let j = 0; j < 3; j++) {
+      ctx.beginPath();
+      ctx.moveTo(pts[j].x, pts[j].y);
+      ctx.lineTo(pts[(j+1)%3].x, pts[(j+1)%3].y);
+      ctx.stroke();
+    }
+  }
+  ctx.setLineDash([]);
+
+  // Draw each strand
+  strands.forEach(({phase, r, color, label}) => {
+    ctx.strokeStyle = color; ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    for (let i = 0; i <= steps; i++) {
+      const prog = i / steps;
+      const x = cx + Math.cos(phase + ao + prog * Math.PI * 2 * turns) * r;
+      const y = hTop + prog * hLen;
+      i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    // Residue dots every 1/3 turn
+    for (let i = 0; i <= steps; i += Math.floor(steps/(turns*3))) {
+      const prog = i/steps;
+      const x = cx + Math.cos(phase + ao + prog * Math.PI * 2 * turns) * r;
+      const y = hTop + prog * hLen;
+      ctx.beginPath(); ctx.arc(x,y,3.5,0,Math.PI*2);
+      ctx.fillStyle = color; ctx.fill();
+    }
+    // Label at top
+    const lx = cx + Math.cos(phase + ao) * r;
+    const ly = hTop - 10;
+    ctx.fillStyle = color; ctx.font = 'bold ' + Math.max(10,h*.045) + 'px Calibri,sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText(label, lx, ly);
+  });
+
+  // (111) hex face at bottom
+  const hexY  = h * 0.82;
+  const hexR  = Math.min(w,h) * 0.14;
+  const ar    = hexR * 0.30;
+  const hexPts = [];
+  for (let row = -2; row <= 2; row++) {
+    for (let col = -2; col <= 2; col++) {
+      const x = cx + col*ar*2 + (Math.abs(row)%2===1?ar:0);
+      const y = hexY + row*ar*1.732;
+      if (Math.hypot(x-cx, y-hexY) < hexR) hexPts.push([x,y]);
+    }
+  }
+  hexPts.forEach(([x,y]) => {
+    ctx.beginPath(); ctx.arc(x,y,ar-0.5,0,Math.PI*2);
+    ctx.fillStyle = 'rgba(74,222,128,0.28)'; ctx.fill();
+    ctx.strokeStyle = '#4ADE80'; ctx.lineWidth=1; ctx.stroke();
+  });
+  ctx.fillStyle='#4ADE80'; ctx.textAlign='center';
+  ctx.font = 'bold ' + Math.max(10,h*.042) + 'px Calibri,sans-serif';
+  ctx.fillText('(111) 晶面', cx, hexY + hexR + h*.04);
+
+  // Pulsing arrow: helix → (111)
+  const pulse = 0.5 + 0.5 * Math.sin(helixT * 0.07);
+  const aFrom = hBot + h*.015, aTo = hexY - hexR - h*.015;
+  if (aTo > aFrom + 8) {
+    ctx.strokeStyle = `rgba(192,114,40,${0.45+0.45*pulse})`; ctx.lineWidth=2;
+    ctx.setLineDash([5,4]);
+    ctx.beginPath(); ctx.moveTo(cx, aFrom); ctx.lineTo(cx, aTo); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = `rgba(192,114,40,${0.65+0.35*pulse})`;
+    ctx.beginPath(); ctx.moveTo(cx,aTo); ctx.lineTo(cx-6,aTo-10); ctx.lineTo(cx+6,aTo-10);
+    ctx.closePath(); ctx.fill();
+  }
+  // Lock label
+  ctx.fillStyle='#C07228'; ctx.textAlign='center';
+  ctx.font = Math.max(9,h*.038) + 'px Calibri,sans-serif';
+  ctx.fillText('螺旋節距完美嵌入 → 晶面鎖死', cx, hBot + h*.045);
+}
+
+/* Handle window resize */
+window.addEventListener('resize', () => {
+  if (cur === 2  && animFrameId.mfg)     { stopCanvas('mfg');     startMfg();     }
+  
+  if (cur === 4 && animFrameId.plating) { stopCanvas('plating'); startPlating(); }
+  if (cur === 5 && animFrameId.helix)   { stopCanvas('helix'); stopCanvas('xtal'); startHelix(); startXtal(); }
+  if (cur === 6 && animFrameId.pi)      { stopCanvas('pi');    startPiAnim();  }
+  if (cur === 7 && animFrameId.gelita)  { stopCanvas('gelita'); startGelitaPdi(); }
+});
+</script>
+</body>
+</html>
